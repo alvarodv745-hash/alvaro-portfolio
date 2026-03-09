@@ -148,7 +148,7 @@ export default function CaseStudiesSection() {
             <div className="neon-line w-12" />
           </div>
           <h2 className="font-display font-extrabold text-4xl md:text-5xl text-white mb-4">
-            Estudios de Caso
+            Casos de Estudio
           </h2>
           <p className="text-[oklch(0.55_0.01_285)] text-base max-w-2xl">
             Proyectos reales donde he resuelto problemas complejos de ingeniería
@@ -174,11 +174,10 @@ export default function CaseStudiesSection() {
                 <div className="relative h-full">
                   {/* Card */}
                   <div
-                    className={`border border-[oklch(0.18_0.007_285)] bg-[oklch(0.12_0.006_285)] rounded-sm p-6 transition-all duration-300 cursor-pointer ${
-                      isExpanded
+                    className={`border border-[oklch(0.18_0.007_285)] bg-[oklch(0.12_0.006_285)] rounded-sm p-6 transition-all duration-300 cursor-pointer ${isExpanded
                         ? "border-[oklch(0.82_0.22_145/0.4)] bg-[oklch(0.15_0.007_285)]"
                         : "hover:border-[oklch(0.22_0.008_285)] hover:bg-[oklch(0.13_0.006_285)]"
-                    }`}
+                      }`}
                     onClick={() => toggleExpanded(study.id)}
                   >
                     {/* Header */}
@@ -198,9 +197,8 @@ export default function CaseStudiesSection() {
                         </h3>
                       </div>
                       <button
-                        className={`p-1.5 rounded-sm border border-[oklch(0.22_0.008_285)] text-[oklch(0.50_0.01_285)] hover:border-[oklch(0.82_0.22_145/0.4)] hover:text-[oklch(0.82_0.22_145)] transition-all duration-200 flex-shrink-0 ${
-                          isExpanded ? "border-[oklch(0.82_0.22_145/0.4)] text-[oklch(0.82_0.22_145)]" : ""
-                        }`}
+                        className={`p-1.5 rounded-sm border border-[oklch(0.22_0.008_285)] text-[oklch(0.50_0.01_285)] hover:border-[oklch(0.82_0.22_145/0.4)] hover:text-[oklch(0.82_0.22_145)] transition-all duration-200 flex-shrink-0 ${isExpanded ? "border-[oklch(0.82_0.22_145/0.4)] text-[oklch(0.82_0.22_145)]" : ""
+                          }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleExpanded(study.id);
@@ -208,9 +206,8 @@ export default function CaseStudiesSection() {
                       >
                         <ChevronDown
                           size={16}
-                          className={`transition-transform duration-300 ${
-                            isExpanded ? "rotate-180" : ""
-                          }`}
+                          className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""
+                            }`}
                         />
                       </button>
                     </div>
@@ -230,9 +227,8 @@ export default function CaseStudiesSection() {
 
                     {/* Expandable content */}
                     <div
-                      className={`overflow-hidden transition-all duration-300 ${
-                        isExpanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-                      }`}
+                      className={`overflow-hidden transition-all duration-300 ${isExpanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+                        }`}
                     >
                       <div className="space-y-4 pt-4 border-t border-[oklch(0.18_0.007_285)]">
                         {/* Solution */}
