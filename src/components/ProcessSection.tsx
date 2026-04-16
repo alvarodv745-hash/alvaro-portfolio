@@ -1,8 +1,10 @@
 /*
  * SLATE ARCHITECT — Process Section
  * Pasos del flujo de trabajo con línea de tiempo horizontal
+ * V1.2: Framer Motion scroll reveal replaces IntersectionObserver
  */
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import { Palette, Code2, TestTube, Rocket } from "lucide-react";
 
 const ABOUT_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663409244183/gDgPsEnWTTNS5RbR5A8hnT/about-visual-PsPFukERnFWqYJXek5xV2y.webp";
@@ -43,29 +45,19 @@ const steps = [
 ];
 
 export default function ProcessSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section id="process" className="py-24 bg-[oklch(0.09_0.005_285)]" ref={ref}>
+    <section id="process" className="py-24 bg-[oklch(0.09_0.005_285)]">
       <div className="container">
         {/* Header */}
-        <div className="mb-16">
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
           <div className="flex items-center gap-3 mb-4">
             <span className="section-number">// 03</span>
             <div className="neon-line w-12" />
@@ -77,16 +69,16 @@ export default function ProcessSection() {
             Un proceso iterativo y metódico que garantiza calidad en cada fase
             del desarrollo.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Left: Steps */}
+          {/* Left: Steps — staggered reveal */}
           <div className="flex flex-col gap-4">
             {steps.map((step, idx) => {
               const Icon = step.icon;
               const isActive = activeStep === idx;
               return (
-                <button
+                <motion.button
                   key={step.number}
                   onClick={() => setActiveStep(idx)}
                   className={`text-left p-5 rounded-sm border transition-all duration-300 ${
@@ -94,11 +86,10 @@ export default function ProcessSection() {
                       ? "border-[oklch(0.82_0.22_145/0.5)] bg-[oklch(0.12_0.006_285)] shadow-[0_0_20px_oklch(0.82_0.22_145/0.08)]"
                       : "border-[oklch(0.18_0.007_285)] bg-[oklch(0.10_0.005_285)] hover:border-[oklch(0.28_0.008_285)]"
                   }`}
-                  style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? "translateX(0)" : "translateX(-20px)",
-                    transition: `opacity 0.5s ease ${idx * 100}ms, transform 0.5s ease ${idx * 100}ms, border-color 0.3s ease, background-color 0.3s ease`,
-                  }}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: idx * 0.08 }}
+                  viewport={{ once: true }}
                 >
                   <div className="flex items-start gap-4">
                     {/* Icon */}
@@ -140,19 +131,18 @@ export default function ProcessSection() {
                       )}
                     </div>
                   </div>
-                </button>
+                </motion.button>
               );
             })}
           </div>
 
           {/* Right: Visual */}
-          <div
+          <motion.div
             className="relative"
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(20px)",
-              transition: "opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s",
-            }}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
           >
             <div className="relative rounded-sm overflow-hidden border border-[oklch(0.22_0.008_285)]">
               <img
@@ -184,10 +174,10 @@ export default function ProcessSection() {
               </div>
             </div>
 
-            {/* Decorative corner */}
+            {/* Decorative corners */}
             <div className="absolute -top-2 -right-2 w-16 h-16 border-t-2 border-r-2 border-[oklch(0.82_0.22_145/0.4)]" />
             <div className="absolute -bottom-2 -left-2 w-16 h-16 border-b-2 border-l-2 border-[oklch(0.82_0.22_145/0.4)]" />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

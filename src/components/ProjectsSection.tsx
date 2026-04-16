@@ -1,9 +1,9 @@
 /*
  * SLATE ARCHITECT — Projects Section
  * Grid de proyectos destacados con tarjetas interactivas
- * Versión simplificada sin filtros
+ * V1.2: Framer Motion scroll reveal + hover scale + green glow border
  */
-import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { ExternalLink, Github, ArrowUpRight } from "lucide-react";
 
 const PROJ_1 = "https://d2xsxph8kpxj0f.cloudfront.net/310519663409244183/gDgPsEnWTTNS5RbR5A8hnT/project-preview-1-i5yf3YNM3k79sPHADBqj8u.webp";
@@ -57,15 +57,22 @@ const projects: Project[] = [
   },
 ];
 
-function ProjectCard({ project, visible }: { project: Project; visible: boolean }) {
+function ProjectCard({ project }: { project: Project }) {
   return (
-    <article
-      className="group card-glow rounded-sm bg-[oklch(0.12_0.006_285)] overflow-hidden flex flex-col"
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(24px)",
-        transition: "opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+    /*
+     * V1.2 hover polish:
+     * - scale 1.02 on hover via whileHover
+     * - green glow box-shadow via CSS transition (respects .card-glow)
+     * - square corners kept (rounded-sm)
+     * - transition duration-300
+     */
+    <motion.article
+      className="group card-glow rounded-sm bg-[oklch(0.12_0.006_285)] overflow-hidden flex flex-col cursor-default"
+      whileHover={{
+        scale: 1.02,
+        boxShadow: "0 0 28px oklch(0.82 0.22 145 / 0.18), 0 0 0 1px oklch(0.82 0.22 145 / 0.30)",
       }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
       {/* Image */}
       <div className="relative overflow-hidden aspect-video">
@@ -137,37 +144,22 @@ function ProjectCard({ project, visible }: { project: Project; visible: boolean 
           ))}
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
 export default function ProjectsSection() {
-  const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section
-      id="projects"
-      className="py-24 bg-[oklch(0.07_0.004_285)]"
-      ref={ref}
-    >
+    <section id="projects" className="py-24 bg-[oklch(0.07_0.004_285)]">
       <div className="container">
-        {/* Header */}
-        <div className="mb-12">
+        {/* Header — fade in from below */}
+        <motion.div
+          className="mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
           <div className="flex items-center gap-3 mb-4">
             <span className="section-number">// 02</span>
             <div className="neon-line w-12" />
@@ -181,22 +173,31 @@ export default function ProjectsSection() {
               técnicas y capacidad de resolución de problemas.
             </p>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Grid */}
+        {/* Grid — staggered reveal */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {projects.map((project, idx) => (
-            <div
+            <motion.div
               key={project.id}
-              style={{ transitionDelay: `${idx * 80}ms` }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: idx * 0.08 }}
+              viewport={{ once: true }}
             >
-              <ProjectCard project={project} visible={visible} />
-            </div>
+              <ProjectCard project={project} />
+            </motion.div>
           ))}
         </div>
 
         {/* View all */}
-        <div className="mt-12 flex justify-center">
+        <motion.div
+          className="mt-12 flex justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          viewport={{ once: true }}
+        >
           <a
             href="https://github.com/alvaroduranvalor"
             target="_blank"
@@ -208,7 +209,7 @@ export default function ProjectsSection() {
               Ver todos en GitHub
             </span>
           </a>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

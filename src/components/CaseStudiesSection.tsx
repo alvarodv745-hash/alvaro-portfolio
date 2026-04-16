@@ -1,9 +1,10 @@
 /*
  * SLATE ARCHITECT — Case Studies Section
  * Estudios de caso profundos de proyectos reales
- * Estructura: Problema → Solución → Tecnologías → Resultado
+ * V1.2: Framer Motion scroll reveal + AnimatePresence accordion (no max-height hack)
  */
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Code2, Target, Zap, TrendingUp } from "lucide-react";
 
 interface CaseStudy {
@@ -102,47 +103,37 @@ interface ExpandedState {
   [key: number]: boolean;
 }
 
-export default function CaseStudiesSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  const [expanded, setExpanded] = useState<ExpandedState>({});
+function getCategoryColor(category: string): string {
+  switch (category) {
+    case "Web":
+      return "text-blue-400";
+    case "Móvil":
+      return "text-purple-400";
+    case "Backend":
+      return "text-green-400";
+    default:
+      return "text-gray-400";
+  }
+}
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+export default function CaseStudiesSection() {
+  const [expanded, setExpanded] = useState<ExpandedState>({});
 
   const toggleExpanded = (id: number) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "Web":
-        return "text-blue-400";
-      case "Móvil":
-        return "text-purple-400";
-      case "Backend":
-        return "text-green-400";
-      default:
-        return "text-gray-400";
-    }
-  };
-
   return (
-    <section id="case-studies" className="py-24 bg-[oklch(0.09_0.005_285)]" ref={ref}>
+    <section id="case-studies" className="py-24 bg-[oklch(0.09_0.005_285)]">
       <div className="container">
         {/* Header */}
-        <div className="mb-16">
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
           <div className="flex items-center gap-3 mb-4">
             <span className="section-number">// 04</span>
             <div className="neon-line w-12" />
@@ -155,29 +146,29 @@ export default function CaseStudiesSection() {
             de software. Cada caso muestra el problema, la solución técnica y el
             impacto en el negocio.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Case Studies Grid */}
+        {/* Case Studies Grid — staggered reveal */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {caseStudies.map((study, idx) => {
             const isExpanded = expanded[study.id];
             return (
-              <div
+              <motion.div
                 key={study.id}
                 className="group"
-                style={{
-                  opacity: visible ? 1 : 0,
-                  transform: visible ? "translateY(0)" : "translateY(20px)",
-                  transition: `opacity 0.6s ease ${idx * 80}ms, transform 0.6s ease ${idx * 80}ms`,
-                }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: idx * 0.08 }}
+                viewport={{ once: true }}
               >
                 <div className="relative h-full">
                   {/* Card */}
                   <div
-                    className={`border border-[oklch(0.18_0.007_285)] bg-[oklch(0.12_0.006_285)] rounded-sm p-6 transition-all duration-300 cursor-pointer ${isExpanded
+                    className={`border border-[oklch(0.18_0.007_285)] bg-[oklch(0.12_0.006_285)] rounded-sm p-6 transition-all duration-300 cursor-pointer ${
+                      isExpanded
                         ? "border-[oklch(0.82_0.22_145/0.4)] bg-[oklch(0.15_0.007_285)]"
                         : "hover:border-[oklch(0.22_0.008_285)] hover:bg-[oklch(0.13_0.006_285)]"
-                      }`}
+                    }`}
                     onClick={() => toggleExpanded(study.id)}
                   >
                     {/* Header */}
@@ -197,22 +188,25 @@ export default function CaseStudiesSection() {
                         </h3>
                       </div>
                       <button
-                        className={`p-1.5 rounded-sm border border-[oklch(0.22_0.008_285)] text-[oklch(0.50_0.01_285)] hover:border-[oklch(0.82_0.22_145/0.4)] hover:text-[oklch(0.82_0.22_145)] transition-all duration-200 flex-shrink-0 ${isExpanded ? "border-[oklch(0.82_0.22_145/0.4)] text-[oklch(0.82_0.22_145)]" : ""
-                          }`}
+                        aria-label={isExpanded ? "Cerrar" : "Expandir"}
+                        className={`p-1.5 rounded-sm border border-[oklch(0.22_0.008_285)] text-[oklch(0.50_0.01_285)] hover:border-[oklch(0.82_0.22_145/0.4)] hover:text-[oklch(0.82_0.22_145)] transition-all duration-200 flex-shrink-0 ${
+                          isExpanded ? "border-[oklch(0.82_0.22_145/0.4)] text-[oklch(0.82_0.22_145)]" : ""
+                        }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleExpanded(study.id);
                         }}
                       >
-                        <ChevronDown
-                          size={16}
-                          className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""
-                            }`}
-                        />
+                        <motion.div
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                        >
+                          <ChevronDown size={16} />
+                        </motion.div>
                       </button>
                     </div>
 
-                    {/* Problem - Always visible */}
+                    {/* Problem — always visible */}
                     <div className="mb-4">
                       <div className="flex items-center gap-2 mb-2">
                         <Target size={14} className="text-[oklch(0.82_0.22_145)]" />
@@ -225,82 +219,98 @@ export default function CaseStudiesSection() {
                       </p>
                     </div>
 
-                    {/* Expandable content */}
-                    <div
-                      className={`overflow-hidden transition-all duration-300 ${isExpanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-                        }`}
-                    >
-                      <div className="space-y-4 pt-4 border-t border-[oklch(0.18_0.007_285)]">
-                        {/* Solution */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <Zap size={14} className="text-[oklch(0.82_0.22_145)]" />
-                            <span className="font-mono text-xs text-[oklch(0.55_0.01_285)] tracking-wider uppercase">
-                              Solución
-                            </span>
-                          </div>
-                          <p className="text-[oklch(0.52_0.01_285)] text-sm leading-relaxed">
-                            {study.solution}
-                          </p>
-                        </div>
+                    {/*
+                     * V1.2 Task 4 — AnimatePresence accordion:
+                     * Animates height from 0→auto using layout + initial/exit variants.
+                     * No max-height hack, no layout jump.
+                     */}
+                    <AnimatePresence initial={false}>
+                      {isExpanded && (
+                        <motion.div
+                          key="content"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.35, ease: "easeInOut" }}
+                          style={{ overflow: "hidden" }}
+                        >
+                          <div className="space-y-4 pt-4 border-t border-[oklch(0.18_0.007_285)]">
+                            {/* Solution */}
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <Zap size={14} className="text-[oklch(0.82_0.22_145)]" />
+                                <span className="font-mono text-xs text-[oklch(0.55_0.01_285)] tracking-wider uppercase">
+                                  Solución
+                                </span>
+                              </div>
+                              <p className="text-[oklch(0.52_0.01_285)] text-sm leading-relaxed">
+                                {study.solution}
+                              </p>
+                            </div>
 
-                        {/* Technologies */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <Code2 size={14} className="text-[oklch(0.82_0.22_145)]" />
-                            <span className="font-mono text-xs text-[oklch(0.55_0.01_285)] tracking-wider uppercase">
-                              Tecnologías
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            {study.technologies.map((tech) => (
-                              <span
-                                key={tech}
-                                className="px-2 py-1 rounded-sm text-xs font-mono bg-[oklch(0.82_0.22_145/0.08)] text-[oklch(0.82_0.22_145)] border border-[oklch(0.82_0.22_145/0.2)]"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                            {/* Technologies */}
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <Code2 size={14} className="text-[oklch(0.82_0.22_145)]" />
+                                <span className="font-mono text-xs text-[oklch(0.55_0.01_285)] tracking-wider uppercase">
+                                  Tecnologías
+                                </span>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                {study.technologies.map((tech) => (
+                                  <span
+                                    key={tech}
+                                    className="px-2 py-1 rounded-sm text-xs font-mono bg-[oklch(0.82_0.22_145/0.08)] text-[oklch(0.82_0.22_145)] border border-[oklch(0.82_0.22_145/0.2)]"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
 
-                        {/* Result */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <TrendingUp size={14} className="text-[oklch(0.82_0.22_145)]" />
-                            <span className="font-mono text-xs text-[oklch(0.55_0.01_285)] tracking-wider uppercase">
-                              Resultado
-                            </span>
+                            {/* Result */}
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <TrendingUp size={14} className="text-[oklch(0.82_0.22_145)]" />
+                                <span className="font-mono text-xs text-[oklch(0.55_0.01_285)] tracking-wider uppercase">
+                                  Resultado
+                                </span>
+                              </div>
+                              <p className="text-[oklch(0.52_0.01_285)] text-sm leading-relaxed mb-3">
+                                {study.result}
+                              </p>
+                              <div className="p-3 rounded-sm bg-[oklch(0.82_0.22_145/0.05)] border border-[oklch(0.82_0.22_145/0.15)]">
+                                <p className="font-mono text-xs text-[oklch(0.82_0.22_145)]">
+                                  <span className="text-[oklch(0.55_0.01_285)]">→ Impacto: </span>
+                                  {study.impact}
+                                </p>
+                              </div>
+                            </div>
                           </div>
-                          <p className="text-[oklch(0.52_0.01_285)] text-sm leading-relaxed mb-3">
-                            {study.result}
-                          </p>
-                          <div className="p-3 rounded-sm bg-[oklch(0.82_0.22_145/0.05)] border border-[oklch(0.82_0.22_145/0.15)]">
-                            <p className="font-mono text-xs text-[oklch(0.82_0.22_145)]">
-                              <span className="text-[oklch(0.55_0.01_285)]">→ Impacto: </span>
-                              {study.impact}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
                   {/* Glow effect on hover */}
                   <div
                     className="absolute -inset-0.5 bg-gradient-to-r from-[oklch(0.82_0.22_145/0)] via-[oklch(0.82_0.22_145/0.1)] to-[oklch(0.82_0.22_145/0)] rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-                    style={{
-                      filter: "blur(8px)",
-                    }}
+                    style={{ filter: "blur(8px)" }}
                   />
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Footer */}
-        <div className="mt-16 pt-12 border-t border-[oklch(0.15_0.006_285)]">
+        <motion.div
+          className="mt-16 pt-12 border-t border-[oklch(0.15_0.006_285)]"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
           <p className="text-[oklch(0.45_0.01_285)] text-sm text-center">
             ¿Tienes un proyecto similar? Estoy disponible para consultoría y
             desarrollo de soluciones complejas.{" "}
@@ -314,7 +324,7 @@ export default function CaseStudiesSection() {
               Hablemos
             </button>
           </p>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

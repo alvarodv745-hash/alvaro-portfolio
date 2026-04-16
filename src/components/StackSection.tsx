@@ -1,9 +1,9 @@
 /*
  * SLATE ARCHITECT — Stack Section
  * Tecnologías agrupadas por categoría con niveles cualitativos
- * Niveles: Avanzado, Intermedio, Familiarizado
+ * V1.2: Framer Motion scroll reveal replaces IntersectionObserver
  */
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 type SkillLevel = "Avanzado" | "Intermedio" | "Familiarizado";
 
@@ -75,11 +75,11 @@ const categories: Category[] = [
 function getLevelColor(level: SkillLevel): string {
   switch (level) {
     case "Avanzado":
-      return "text-[oklch(0.82_0.22_145)]"; // Neon green
+      return "text-[oklch(0.82_0.22_145)]";
     case "Intermedio":
-      return "text-[oklch(0.70_0.12_70)]"; // Yellow/amber
+      return "text-[oklch(0.70_0.12_70)]";
     case "Familiarizado":
-      return "text-[oklch(0.60_0.08_250)]"; // Blue
+      return "text-[oklch(0.60_0.08_250)]";
     default:
       return "text-[oklch(0.55_0.01_285)]";
   }
@@ -135,28 +135,17 @@ function SkillCard({ name, level, color }: SkillCardProps) {
 }
 
 export default function StackSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [animate, setAnimate] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setAnimate(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section id="stack" className="py-24 bg-[oklch(0.09_0.005_285)]" ref={ref}>
+    <section id="stack" className="py-24 bg-[oklch(0.09_0.005_285)]">
       <div className="container">
         {/* Header */}
-        <div className="mb-16">
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
           <div className="flex items-center gap-3 mb-4">
             <span className="section-number">// 01</span>
             <div className="neon-line w-12" />
@@ -168,20 +157,18 @@ export default function StackSection() {
             Tecnologías con las que trabajo en el día a día, desde el diseño
             hasta el despliegue en producción.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Grid */}
+        {/* Grid — staggered reveal */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {categories.map((cat, catIdx) => (
-            <div
+            <motion.div
               key={cat.label}
-              className="card-glow p-6 rounded-sm bg-[oklch(0.12_0.006_285)] border border-[oklch(0.18_0.007_285)] hover:border-[oklch(0.22_0.008_285)] transition-all duration-300"
-              style={{
-                transitionDelay: `${catIdx * 80}ms`,
-                opacity: animate ? 1 : 0,
-                transform: animate ? "translateY(0)" : "translateY(20px)",
-                transition: `opacity 0.6s ease ${catIdx * 80}ms, transform 0.6s ease ${catIdx * 80}ms, border-color 0.3s ease, box-shadow 0.3s ease`,
-              }}
+              className="card-glow p-6 rounded-sm bg-[oklch(0.12_0.006_285)] border border-[oklch(0.18_0.007_285)] hover:border-[oklch(0.22_0.008_285)] transition-colors duration-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: catIdx * 0.08 }}
+              viewport={{ once: true }}
             >
               {/* Category header */}
               <div className="flex items-center gap-3 mb-6">
@@ -202,17 +189,16 @@ export default function StackSection() {
                   />
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
 
-          {/* Extra card: Certificaciones / Formación */}
-          <div
-            className="card-glow p-6 rounded-sm bg-[oklch(0.12_0.006_285)] border border-[oklch(0.18_0.007_285)] flex flex-col justify-between hover:border-[oklch(0.22_0.008_285)] transition-all duration-300"
-            style={{
-              opacity: animate ? 1 : 0,
-              transform: animate ? "translateY(0)" : "translateY(20px)",
-              transition: `opacity 0.6s ease 400ms, transform 0.6s ease 400ms, border-color 0.3s ease, box-shadow 0.3s ease`,
-            }}
+          {/* Extra card: Formación */}
+          <motion.div
+            className="card-glow p-6 rounded-sm bg-[oklch(0.12_0.006_285)] border border-[oklch(0.18_0.007_285)] flex flex-col justify-between hover:border-[oklch(0.22_0.008_285)] transition-colors duration-300"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: categories.length * 0.08 }}
+            viewport={{ once: true }}
           >
             <div>
               <div className="flex items-center gap-3 mb-6">
@@ -239,11 +225,17 @@ export default function StackSection() {
             <div className="mt-6 pt-4 border-t border-[oklch(0.18_0.007_285)]">
               <span className="tech-tag">En constante aprendizaje</span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Legend */}
-        <div className="mt-12 pt-8 border-t border-[oklch(0.15_0.006_285)]">
+        <motion.div
+          className="mt-12 pt-8 border-t border-[oklch(0.15_0.006_285)]"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
           <p className="text-xs text-[oklch(0.45_0.01_285)] mb-4 font-mono uppercase tracking-wider">
             Niveles de competencia
           </p>
@@ -267,7 +259,7 @@ export default function StackSection() {
               </span>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

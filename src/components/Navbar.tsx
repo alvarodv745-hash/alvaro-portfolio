@@ -1,6 +1,7 @@
 /*
  * SLATE ARCHITECT — Navbar
  * Navegación fija con indicador de sección activa y efecto blur
+ * V1.2: glassmorphism polish — stronger blur, border reacts to scroll, shadow
  */
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
@@ -48,11 +49,27 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-[oklch(0.09_0.005_285/0.92)] backdrop-blur-md border-b border-[oklch(0.22_0.008_285)]"
-          : "bg-transparent"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        /**
+         * V1.2 glassmorphism:
+         * - Always has a dark semi-transparent base (prevents white flicker)
+         * - Blur increases from 12px → 20px on scroll
+         * - Border goes from invisible → visible on scroll
+         * - Shadow appears only when scrolled
+         */
+        backdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "blur(12px)",
+        WebkitBackdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "blur(12px)",
+        backgroundColor: scrolled
+          ? "oklch(0.09 0.005 285 / 0.92)"
+          : "oklch(0.09 0.005 285 / 0.55)",
+        borderBottom: scrolled
+          ? "1px solid oklch(0.28 0.009 285 / 0.70)"
+          : "1px solid oklch(0.22 0.008 285 / 0.20)",
+        boxShadow: scrolled
+          ? "0 4px 30px oklch(0 0 0 / 0.40), 0 1px 0 oklch(0.82 0.22 145 / 0.06)"
+          : "none",
+      }}
     >
       <div className="container">
         <nav className="flex items-center justify-between h-16">
@@ -113,7 +130,14 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-[oklch(0.09_0.005_285/0.97)] backdrop-blur-md border-b border-[oklch(0.22_0.008_285)]">
+        <div
+          className="md:hidden border-b border-[oklch(0.22_0.008_285)]"
+          style={{
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            backgroundColor: "oklch(0.09 0.005 285 / 0.97)",
+          }}
+        >
           <ul className="container py-4 flex flex-col gap-1">
             {navLinks.map((link) => (
               <li key={link.href}>
