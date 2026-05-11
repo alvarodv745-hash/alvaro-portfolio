@@ -1,8 +1,3 @@
-/*
- * SLATE ARCHITECT — Footer
- * Pie de página minimalista con links y copyright
- * V1.2: animated gradient neon scan line at top edge
- */
 import { Github, Linkedin, Mail, ArrowUp, Atom, Wind } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -75,7 +70,7 @@ export default function Footer() {
           {/* Social + scroll top */}
           <div className="flex items-center gap-4">
             <a
-              href="https://github.com/alvaroduranvalor"
+              href="https://github.com/alvarodv745-hash"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[oklch(0.55_0.01_285)] hover:text-white transition-colors duration-200"
@@ -84,7 +79,7 @@ export default function Footer() {
               <Github size={16} />
             </a>
             <a
-              href="https://linkedin.com/in/alvaroduranvalor"
+              href="https://www.linkedin.com/in/álvaro-durán-valor"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[oklch(0.55_0.01_285)] hover:text-[#0A66C2] transition-colors duration-200"
@@ -93,7 +88,7 @@ export default function Footer() {
               <Linkedin size={16} />
             </a>
             <a
-              href="mailto:alvaro@duranvalor.dev"
+              href="mailto:alvarodv745@gmail.com"
               className="text-[oklch(0.55_0.01_285)] hover:text-[oklch(0.82_0.22_145)] transition-colors duration-200"
               aria-label="Email"
             >
@@ -118,7 +113,7 @@ export default function Footer() {
             © {new Date().getFullYear()} Álvaro Durán Valor. Todos los derechos reservados.
           </p>
           <p className="text-xs text-[oklch(0.60_0.01_285)] font-mono flex items-center justify-center sm:justify-end gap-1.5 flex-wrap">
-            Desarrollado para un alto rendimiento, construido con
+            Desarrollado por Álvaro Durán Valor, construido con
             <Atom size={12} className="text-[oklch(0.82_0.22_145)] ml-0.5" aria-label="React" />
             <span>+</span>
             <Wind size={12} className="text-[oklch(0.82_0.22_145)]" aria-label="Tailwind" />

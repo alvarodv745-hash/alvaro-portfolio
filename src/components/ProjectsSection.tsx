@@ -1,14 +1,9 @@
-/*
- * SLATE ARCHITECT — Projects Section
- * Grid de proyectos destacados con tarjetas interactivas
- * V1.2: Framer Motion scroll reveal + hover scale + green glow border
- */
 import { motion } from "framer-motion";
-import { ExternalLink, Github, ArrowUpRight } from "lucide-react";
+import { Github, ArrowUpRight } from "lucide-react";
 
-const PROJ_1 = "https://d2xsxph8kpxj0f.cloudfront.net/310519663409244183/gDgPsEnWTTNS5RbR5A8hnT/project-preview-1-i5yf3YNM3k79sPHADBqj8u.webp";
-const PROJ_2 = "https://d2xsxph8kpxj0f.cloudfront.net/310519663409244183/gDgPsEnWTTNS5RbR5A8hnT/project-preview-2-fG4X9fnCbiRJge9RPeJ35K.webp";
-const PROJ_3 = "https://d2xsxph8kpxj0f.cloudfront.net/310519663409244183/gDgPsEnWTTNS5RbR5A8hnT/project-preview-3-AHXSraLB4PHNV86zkuK97c.webp";
+const PROJ_1 = "/Logo_LyricBeats.png";
+const PROJ_2 = "/Panel_tarjetasRegalo.png";
+const PROJ_3 = "/Interfaz-sistema-biblioteca.png";
 
 interface Project {
   id: number;
@@ -17,43 +12,39 @@ interface Project {
   image: string;
   tags: string[];
   category: string;
-  demo?: string;
   repo?: string;
 }
 
 const projects: Project[] = [
   {
     id: 1,
-    title: "Dashboard Analytics",
+    title: "LyricBeats",
     description:
-      "Panel de control con visualización de datos en tiempo real, gráficas interactivas y gestión de métricas para equipos de desarrollo.",
+      "Aplicación web, diseñada como herramienta de creación musical, para generar letras de canciones con inteligencia artificial y melodías básicas.",
     image: PROJ_1,
-    tags: ["React", "TypeScript", "Recharts", "Node.js"],
-    category: "Web",
-    demo: "#",
-    repo: "#",
+    tags: ["React + Vite", "JavaScript", "GroqAI", "Firebase"],
+    category: "Web App",
+    repo: "https://github.com/alvarodv745-hash/lyricbeats-tfg",
   },
   {
     id: 2,
-    title: "TaskFlow Mobile",
+    title: "Generador de Código de Barras",
     description:
-      "Aplicación móvil de gestión de tareas con sincronización en la nube, notificaciones push y modo offline para Android e iOS.",
+      "Panel web interno para crear, consultar y gestionar tarjetas regalo con códigos de barras, historial de movimientos y control de saldo en tiempo real.",
     image: PROJ_2,
-    tags: ["Flutter", "Dart", "Firebase", "Provider"],
-    category: "Móvil",
-    demo: "#",
+    tags: ["Python", "JavaScript", "Firebase"],
+    category: "PWA",
     repo: "#",
   },
   {
     id: 3,
-    title: "API REST E-Commerce",
+    title: "Sistema Biblioteca ",
     description:
-      "API REST completa para plataforma de comercio electrónico con autenticación JWT, documentación Swagger y tests unitarios.",
+      "Sistema cliente‑servidor para gestionar biblioteca mediante API REST en PHP/MySQL y cliente en Python con Tkinter, escáner QR y control de préstamos y usuarios.",
     image: PROJ_3,
-    tags: ["Java", "Spring Boot", "MySQL", "Docker"],
-    category: "Backend",
-    demo: "#",
-    repo: "#",
+    tags: ["XAMPP", "Python", "PHP", "REST API", "Tkinter", "MySQL"],
+    category: "Backend App",
+    repo: "https://github.com/alvarodv745-hash/sistema-biblioteca",
   },
 ];
 
@@ -92,18 +83,6 @@ function ProjectCard({ project }: { project: Project }) {
 
         {/* Hover overlay with links */}
         <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          {project.demo && (
-            <a
-              href={project.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-4 py-2 bg-[oklch(0.82_0.22_145)] text-[oklch(0.09_0.005_285)] text-xs font-semibold rounded-sm hover:bg-white transition-colors duration-200"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <ExternalLink size={12} />
-              Demo
-            </a>
-          )}
           {project.repo && (
             <a
               href={project.repo}
@@ -199,7 +178,7 @@ export default function ProjectsSection() {
           viewport={{ once: true }}
         >
           <a
-            href="https://github.com/alvaroduranvalor"
+            href="https://github.com/alvarodv745-hash?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 btn-neon px-8 py-3 rounded-sm text-sm"

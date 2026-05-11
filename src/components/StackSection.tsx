@@ -1,8 +1,3 @@
-/*
- * SLATE ARCHITECT — Stack Section
- * Tecnologías agrupadas por categoría con niveles cualitativos
- * V1.2: Framer Motion scroll reveal replaces IntersectionObserver
- */
 import { motion } from "framer-motion";
 
 type SkillLevel = "Avanzado" | "Intermedio" | "Familiarizado";
@@ -24,8 +19,8 @@ const categories: Category[] = [
     label: "Frontend",
     number: "01",
     items: [
-      { name: "React", level: "Avanzado", color: "#61DAFB" },
-      { name: "TypeScript", level: "Avanzado", color: "#3178C6" },
+      { name: "React", level: "Familiarizado", color: "#61DAFB" },
+      { name: "JavaScript", level: "Familiarizado", color: "#3178C6" },
       { name: "Tailwind CSS", level: "Avanzado", color: "#38BDF8" },
       { name: "HTML / CSS", level: "Avanzado", color: "#E34F26" },
     ],
@@ -34,9 +29,9 @@ const categories: Category[] = [
     label: "Backend",
     number: "02",
     items: [
-      { name: "Node.js", level: "Avanzado", color: "#68A063" },
+      { name: "Node.js", level: "Intermedio", color: "#68A063" },
       { name: "Python", level: "Avanzado", color: "#FFD43B" },
-      { name: "Java", level: "Intermedio", color: "#F89820" },
+      { name: "Java", level: "Familiarizado", color: "#F89820" },
       { name: "Spring Boot", level: "Intermedio", color: "#6DB33F" },
     ],
   },
@@ -44,10 +39,10 @@ const categories: Category[] = [
     label: "Móvil",
     number: "03",
     items: [
-      { name: "Flutter", level: "Avanzado", color: "#54C5F8" },
-      { name: "Dart", level: "Avanzado", color: "#0175C2" },
-      { name: "Android (Kotlin)", level: "Intermedio", color: "#A97BFF" },
-      { name: "React Native", level: "Intermedio", color: "#61DAFB" },
+      { name: "Flutter", level: "Familiarizado", color: "#54C5F8" },
+      { name: "Dart", level: "Intermedio", color: "#0175C2" },
+      { name: "Android (Kotlin)", level: "Familiarizado", color: "#A97BFF" },
+      { name: "React Native", level: "Familiarizado", color: "#61DAFB" },
     ],
   },
   {
@@ -55,8 +50,8 @@ const categories: Category[] = [
     number: "04",
     items: [
       { name: "MySQL", level: "Avanzado", color: "#4479A1" },
-      { name: "PostgreSQL", level: "Avanzado", color: "#336791" },
-      { name: "MongoDB", level: "Intermedio", color: "#47A248" },
+      { name: "PostgreSQL", level: "Intermedio", color: "#336791" },
+      { name: "MongoDB", level: "Familiarizado", color: "#47A248" },
       { name: "Firebase", level: "Avanzado", color: "#FFCA28" },
     ],
   },
@@ -66,7 +61,7 @@ const categories: Category[] = [
     items: [
       { name: "Git / GitHub", level: "Avanzado", color: "#F05032" },
       { name: "Docker", level: "Intermedio", color: "#2496ED" },
-      { name: "Figma", level: "Intermedio", color: "#F24E1E" },
+      { name: "Figma", level: "Avanzado", color: "#F24E1E" },
       { name: "VS Code", level: "Avanzado", color: "#007ACC" },
     ],
   },

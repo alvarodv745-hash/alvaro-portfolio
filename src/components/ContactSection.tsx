@@ -1,8 +1,3 @@
-/*
- * SLATE ARCHITECT — Contact Section
- * Formulario de contacto + links sociales
- * V1.2: Framer Motion scroll reveal replaces IntersectionObserver
- */
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail, Send, CheckCircle } from "lucide-react";
@@ -12,22 +7,22 @@ const socialLinks = [
   {
     icon: Github,
     label: "GitHub",
-    handle: "@alvaroduranvalor",
-    href: "https://github.com/alvaroduranvalor",
+    handle: "@alvarodv745",
+    href: "https://github.com/alvarodv745-hash",
     color: "hover:text-white",
   },
   {
     icon: Linkedin,
     label: "LinkedIn",
     handle: "Álvaro Durán Valor",
-    href: "https://linkedin.com/in/alvaroduranvalor",
+    href: "https://www.linkedin.com/in/álvaro-durán-valor",
     color: "hover:text-[#0A66C2]",
   },
   {
     icon: Mail,
     label: "Email",
-    handle: "alvaro@duranvalor.dev",
-    href: "mailto:alvaro@duranvalor.dev",
+    handle: "alvarodv745@gmail.com",
+    href: "mailto:alvarodv745@gmail.com",
     color: "hover:text-[oklch(0.82_0.22_145)]",
   },
 ];

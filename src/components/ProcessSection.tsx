@@ -1,13 +1,8 @@
-/*
- * SLATE ARCHITECT — Process Section
- * Pasos del flujo de trabajo con línea de tiempo horizontal
- * V1.2: Framer Motion scroll reveal replaces IntersectionObserver
- */
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Palette, Code2, TestTube, Rocket } from "lucide-react";
 
-const ABOUT_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663409244183/gDgPsEnWTTNS5RbR5A8hnT/about-visual-PsPFukERnFWqYJXek5xV2y.webp";
+import ProcessTerminal from "./ProcessTerminal";
 
 const steps = [
   {
@@ -32,7 +27,7 @@ const steps = [
     title: "Testing",
     description:
       "Escribo tests unitarios e integración para garantizar la calidad del software. Realizo pruebas de rendimiento y revisión de código antes de cada entrega.",
-    tools: ["JUnit", "Jest", "Flutter Test", "Postman"],
+    tools: ["JUnit", "Jest", "Flutter Test", "Postman", "Thunder Client"],
   },
   {
     number: "04",
@@ -40,7 +35,7 @@ const steps = [
     title: "Deploy",
     description:
       "Despliego la aplicación en entornos de producción con CI/CD automatizado. Monitorizo el rendimiento y aplico mejoras continuas basadas en métricas reales.",
-    tools: ["Docker", "GitHub Actions", "Vercel", "Firebase"],
+    tools: ["Docker", "GitHub Actions", "Vercel", "Firebase", "Supabase"],
   },
 ];
 
@@ -81,11 +76,10 @@ export default function ProcessSection() {
                 <motion.button
                   key={step.number}
                   onClick={() => setActiveStep(idx)}
-                  className={`text-left p-5 rounded-sm border transition-all duration-300 ${
-                    isActive
-                      ? "border-[oklch(0.82_0.22_145/0.5)] bg-[oklch(0.12_0.006_285)] shadow-[0_0_20px_oklch(0.82_0.22_145/0.08)]"
-                      : "border-[oklch(0.18_0.007_285)] bg-[oklch(0.10_0.005_285)] hover:border-[oklch(0.28_0.008_285)]"
-                  }`}
+                  className={`text-left p-5 rounded-sm border transition-all duration-300 ${isActive
+                    ? "border-[oklch(0.82_0.22_145/0.5)] bg-[oklch(0.12_0.006_285)] shadow-[0_0_20px_oklch(0.82_0.22_145/0.08)]"
+                    : "border-[oklch(0.18_0.007_285)] bg-[oklch(0.10_0.005_285)] hover:border-[oklch(0.28_0.008_285)]"
+                    }`}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
@@ -94,11 +88,10 @@ export default function ProcessSection() {
                   <div className="flex items-start gap-4">
                     {/* Icon */}
                     <div
-                      className={`p-2.5 rounded-sm shrink-0 transition-all duration-300 ${
-                        isActive
-                          ? "bg-[oklch(0.82_0.22_145/0.15)] text-[oklch(0.82_0.22_145)]"
-                          : "bg-[oklch(0.15_0.006_285)] text-[oklch(0.45_0.01_285)]"
-                      }`}
+                      className={`p-2.5 rounded-sm shrink-0 transition-all duration-300 ${isActive
+                        ? "bg-[oklch(0.82_0.22_145/0.15)] text-[oklch(0.82_0.22_145)]"
+                        : "bg-[oklch(0.15_0.006_285)] text-[oklch(0.45_0.01_285)]"
+                        }`}
                     >
                       <Icon size={18} />
                     </div>
@@ -107,9 +100,8 @@ export default function ProcessSection() {
                       <div className="flex items-center gap-2 mb-1">
                         <span className="section-number">{step.number}</span>
                         <h3
-                          className={`font-display font-bold text-base transition-colors duration-200 ${
-                            isActive ? "text-white" : "text-[oklch(0.70_0.01_285)]"
-                          }`}
+                          className={`font-display font-bold text-base transition-colors duration-200 ${isActive ? "text-white" : "text-[oklch(0.70_0.01_285)]"
+                            }`}
                         >
                           {step.title}
                         </h3>
@@ -144,21 +136,16 @@ export default function ProcessSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <div className="relative rounded-sm overflow-hidden border border-[oklch(0.22_0.008_285)]">
-              <img
-                src={ABOUT_IMG}
-                alt="Proceso de desarrollo"
-                className="w-full object-cover"
-                style={{ maxHeight: "420px" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.09_0.005_285/0.8)] via-transparent to-transparent" />
+            <div className="relative rounded-sm overflow-hidden border border-[oklch(0.22_0.008_285)] bg-[oklch(0.08_0.004_285)]">
+              <ProcessTerminal activeStep={activeStep} />
+
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[oklch(0.09_0.005_285/0.4)] via-transparent to-transparent" />
 
               {/* Stats overlay */}
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-1">
                   {[
-                    { value: "10+", label: "Proyectos" },
-                    { value: "2+", label: "Años exp." },
+                    { value: "5+", label: "Proyectos" },
                     { value: "100%", label: "Dedicación" },
                   ].map((stat) => (
                     <div key={stat.label} className="text-center">

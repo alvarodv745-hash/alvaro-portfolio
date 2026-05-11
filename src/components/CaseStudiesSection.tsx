@@ -1,8 +1,3 @@
-/*
- * SLATE ARCHITECT — Case Studies Section
- * Estudios de caso profundos de proyectos reales
- * V1.2: Framer Motion scroll reveal + AnimatePresence accordion (no max-height hack)
- */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Code2, Target, Zap, TrendingUp } from "lucide-react";
@@ -15,87 +10,48 @@ interface CaseStudy {
   technologies: string[];
   result: string;
   impact: string;
-  category: "Web" | "Móvil" | "Backend";
+  category: "Web" | "PWA" | "Desktop";
 }
 
 const caseStudies: CaseStudy[] = [
   {
     id: 1,
-    title: "Dashboard Analytics en Tiempo Real",
+    title: "LyricBeats",
     category: "Web",
     problem:
-      "Una plataforma de e-commerce necesitaba visualizar métricas de ventas en tiempo real. Los reportes se actualizaban cada hora, generando decisiones basadas en datos desactualizados. Los vendedores perdían oportunidades de optimización inmediata.",
+      "Crear letras musicales con IA y sincronizarlas con beats era un proceso manual y fragmentado. Los productores necesitaban herramientas separadas para componer letras, crear bases rítmicas y reproducir el resultado. No existía una plataforma que unificara IA generativa, edición de beats y reproducción sincronizada en un solo flujo de trabajo.",
     solution:
-      "Desarrollé un dashboard interactivo con WebSockets que actualiza métricas cada 5 segundos. Implementé gráficos interactivos con Recharts, caché en cliente con React Query y sincronización bidireccional con el backend. El sistema maneja 10k+ eventos/segundo sin degradación de performance.",
-    technologies: ["React", "TypeScript", "WebSocket", "Recharts", "Node.js", "Redis"],
+      "Desarrollé una plataforma web full-stack que integra Groq API (LLaMA 3.1 8B) para generación de letras con IA, un secuenciador de beats de 16 pasos × 6 instrumentos construido sobre Web Audio API, y sincronización en tiempo real entre letra e instrumentación. Firebase gestiona autenticación y persistencia de proyectos musicales.",
+    technologies: ["React 19", "Groq API", "Firebase", "Tailwind CSS"],
     result:
-      "Los vendedores ahora toman decisiones en tiempo real. Se redujo el tiempo de respuesta ante cambios de mercado de 1 hora a segundos.",
-    impact: "Incremento de 23% en conversiones, reducción de 40% en tiempo de análisis",
+      "Plataforma funcional que unifica IA generativa y producción musical en un solo flujo de trabajo. Los usuarios generan letras, crean beats y escuchan el resultado sin salir de la aplicación.",
+    impact: "Herramienta usable por músicos sin conocimientos técnicos, stack moderno de producción",
   },
   {
     id: 2,
-    title: "App Móvil de Gestión de Tareas Offline-First",
-    category: "Móvil",
+    title: "Panel Tarjetas Regalo",
+    category: "PWA",
     problem:
-      "Usuarios en zonas con conexión intermitente no podían usar la app de productividad. Cada desconexión perdía datos o generaba conflictos de sincronización. La experiencia era frustrante y la retención era baja.",
+      "La gestión manual de tarjetas regalo generaba errores frecuentes en saldos sin trazabilidad de movimientos. Sin historial de transacciones ni códigos de barras estandarizados, era imposible auditar consumos. Los procesos de canje se hacían en papel, con riesgo de duplicados y pérdida de datos.",
     solution:
-      "Construí una arquitectura offline-first con SQLite local y sincronización inteligente. Implementé conflict resolution automático, compresión de datos y queue de operaciones pendientes. La app funciona completamente sin conexión y sincroniza cuando hay red disponible.",
-    technologies: ["Flutter", "SQLite", "Firebase Realtime", "Dart", "Provider"],
+      "Desarrollé una PWA con Vanilla JS y Firebase Firestore que gestiona tarjetas con formato GC-XXXXXXXX, genera códigos de barras CODE128 con JsBarcode y registra cada movimiento de carga y consumo con historial inmutable. Permite descargar etiquetas térmicas e instalarse como app nativa sin tienda de aplicaciones.",
+    technologies: ["Vanilla JS", "Firebase", "JsBarcode", "PWA", "HTML/CSS"],
     result:
-      "La app ahora funciona sin conexión con sincronización automática. Los usuarios pueden trabajar en cualquier lugar sin perder datos.",
-    impact: "Retención aumentó 35%, 50k+ descargas en primer mes, rating 4.8/5",
+      "Sistema de control completo con historial inmutable de movimientos, generación automática de códigos de barras y trazabilidad total de cada tarjeta desde su creación.",
+    impact: "Eliminación de errores manuales, auditoría completa de transacciones, instalable como app nativa",
   },
   {
     id: 3,
-    title: "API REST Escalable para Marketplace",
-    category: "Backend",
+    title: "Sistema de Biblioteca",
+    category: "Desktop",
     problem:
-      "El backend monolítico no escalaba durante picos de tráfico. Los tiempos de respuesta se degradaban de 200ms a 5s. Black Friday causaba caídas del servicio. No había forma de hacer deploys sin downtime.",
+      "La gestión de libros, préstamos y usuarios se realizaba sin automatización ni control de roles. No había visibilidad de disponibilidad en tiempo real y los retrasos en devoluciones no se detectaban automáticamente, generando pérdida de inventario y procesos ineficientes para el personal bibliotecario.",
     solution:
-      "Migré a una arquitectura de microservicios con Node.js y Docker. Implementé load balancing con Nginx, caché distribuido con Redis, base de datos replicada y CI/CD con GitHub Actions. Zero-downtime deployments con blue-green strategy.",
-    technologies: ["Node.js", "Express", "PostgreSQL", "Redis", "Docker", "Kubernetes"],
+      "Construí una arquitectura cliente-servidor completa: API REST en PHP con MySQL que usa triggers automáticos para controlar disponibilidad, cliente de escritorio Python con Tkinter, sistema de roles Bibliotecario/Lector con autenticación, y módulo QR para identificar libros y usuarios mediante webcam.",
+    technologies: ["PHP", "MySQL", "Python", "Tkinter", "REST API"],
     result:
-      "El sistema ahora maneja 100x más tráfico sin degradación. Deploys automáticos sin downtime cada 2 horas.",
-    impact: "99.99% uptime, latencia p95 de 150ms, 1M+ requests/día",
-  },
-  {
-    id: 4,
-    title: "Sistema de Recomendaciones con Machine Learning",
-    category: "Backend",
-    problem:
-      "El algoritmo de recomendaciones era genérico y no personalizaba. Los usuarios veían siempre los mismos productos. Las recomendaciones no generaban conversiones. CTR de solo 2%.",
-    solution:
-      "Implementé un sistema de recomendaciones con collaborative filtering y content-based filtering. Entrenamiento de modelos con Python/scikit-learn, serving en tiempo real con FastAPI. A/B testing para validar mejoras.",
-    technologies: ["Python", "scikit-learn", "FastAPI", "PostgreSQL", "Redis", "Docker"],
-    result:
-      "Recomendaciones personalizadas basadas en comportamiento del usuario. Sistema de A/B testing integrado para validación continua.",
-    impact: "CTR aumentó a 8.5%, AOV +18%, tiempo en sitio +45%",
-  },
-  {
-    id: 5,
-    title: "Plataforma de Streaming de Video Adaptativo",
-    category: "Web",
-    problem:
-      "Los usuarios experimentaban buffering frecuente en conexiones lentas. No había adaptación automática de calidad. El consumo de datos era excesivo. Experiencia inconsistente entre dispositivos.",
-    solution:
-      "Implementé streaming adaptativo con HLS y DASH. Detección automática de ancho de banda, switching dinámico de bitrate, caché de segmentos y optimización de codec. Player personalizado con controles avanzados.",
-    technologies: ["React", "HLS.js", "FFmpeg", "Node.js", "AWS S3", "CloudFront"],
-    result:
-      "Reproducción fluida en cualquier conexión. Adaptación automática de calidad sin intervención del usuario.",
-    impact: "Reducción de buffering 95%, consumo de datos -40%, satisfacción +92%",
-  },
-  {
-    id: 6,
-    title: "App de Fitness con Seguimiento Biométrico",
-    category: "Móvil",
-    problem:
-      "Integración con múltiples sensores biométricos era compleja. Datos inconsistentes entre dispositivos. Sincronización lenta. Batería se agotaba rápidamente.",
-    solution:
-      "Desarrollé drivers nativos para múltiples sensores, sincronización inteligente con batching, compresión de datos y algoritmos de optimización de energía. Integración con HealthKit (iOS) y Google Fit (Android).",
-    technologies: ["Flutter", "Dart", "Native Android", "Swift", "HealthKit", "Google Fit"],
-    result:
-      "Integración perfecta con sensores. Sincronización eficiente sin impacto en batería. Datos consistentes en todos los dispositivos.",
-    impact: "Precisión 98%, autonomía +8 horas, 100k+ usuarios activos",
+      "Sistema integral con control de inventario en tiempo real, detección automática de préstamos retrasados y escaneo QR para agilizar el ciclo completo de préstamo y devolución.",
+    impact: "Automatización completa del ciclo préstamo-devolución, trazabilidad total, cero errores manuales",
   },
 ];
 
@@ -107,9 +63,9 @@ function getCategoryColor(category: string): string {
   switch (category) {
     case "Web":
       return "text-blue-400";
-    case "Móvil":
+    case "PWA":
       return "text-purple-400";
-    case "Backend":
+    case "Desktop":
       return "text-green-400";
     default:
       return "text-gray-400";
@@ -142,14 +98,14 @@ export default function CaseStudiesSection() {
             Casos de Estudio
           </h2>
           <p className="text-[oklch(0.55_0.01_285)] text-base max-w-2xl">
-            Proyectos reales donde he resuelto problemas complejos de ingeniería
-            de software. Cada caso muestra el problema, la solución técnica y el
-            impacto en el negocio.
+            Proyectos reales donde he aplicado distintas tecnologías para
+            resolver problemas concretos. Cada caso muestra el problema,
+            la solución técnica y el resultado final.
           </p>
         </motion.div>
 
-        {/* Case Studies Grid — staggered reveal */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Case Studies Grid — 3 columnas en desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {caseStudies.map((study, idx) => {
             const isExpanded = expanded[study.id];
             return (
@@ -164,11 +120,10 @@ export default function CaseStudiesSection() {
                 <div className="relative h-full">
                   {/* Card */}
                   <div
-                    className={`border border-[oklch(0.18_0.007_285)] bg-[oklch(0.12_0.006_285)] rounded-sm p-6 transition-all duration-300 cursor-pointer ${
-                      isExpanded
-                        ? "border-[oklch(0.82_0.22_145/0.4)] bg-[oklch(0.15_0.007_285)]"
-                        : "hover:border-[oklch(0.22_0.008_285)] hover:bg-[oklch(0.13_0.006_285)]"
-                    }`}
+                    className={`border border-[oklch(0.18_0.007_285)] bg-[oklch(0.12_0.006_285)] rounded-sm p-6 transition-all duration-300 cursor-pointer ${isExpanded
+                      ? "border-[oklch(0.82_0.22_145/0.4)] bg-[oklch(0.15_0.007_285)]"
+                      : "hover:border-[oklch(0.22_0.008_285)] hover:bg-[oklch(0.13_0.006_285)]"
+                      }`}
                     onClick={() => toggleExpanded(study.id)}
                   >
                     {/* Header */}
@@ -189,9 +144,8 @@ export default function CaseStudiesSection() {
                       </div>
                       <button
                         aria-label={isExpanded ? "Cerrar" : "Expandir"}
-                        className={`p-1.5 rounded-sm border border-[oklch(0.22_0.008_285)] text-[oklch(0.50_0.01_285)] hover:border-[oklch(0.82_0.22_145/0.4)] hover:text-[oklch(0.82_0.22_145)] transition-all duration-200 flex-shrink-0 ${
-                          isExpanded ? "border-[oklch(0.82_0.22_145/0.4)] text-[oklch(0.82_0.22_145)]" : ""
-                        }`}
+                        className={`p-1.5 rounded-sm border border-[oklch(0.22_0.008_285)] text-[oklch(0.50_0.01_285)] hover:border-[oklch(0.82_0.22_145/0.4)] hover:text-[oklch(0.82_0.22_145)] transition-all duration-200 flex-shrink-0 ${isExpanded ? "border-[oklch(0.82_0.22_145/0.4)] text-[oklch(0.82_0.22_145)]" : ""
+                          }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleExpanded(study.id);
@@ -219,11 +173,6 @@ export default function CaseStudiesSection() {
                       </p>
                     </div>
 
-                    {/*
-                     * V1.2 Task 4 — AnimatePresence accordion:
-                     * Animates height from 0→auto using layout + initial/exit variants.
-                     * No max-height hack, no layout jump.
-                     */}
                     <AnimatePresence initial={false}>
                       {isExpanded && (
                         <motion.div
@@ -312,8 +261,8 @@ export default function CaseStudiesSection() {
           viewport={{ once: true }}
         >
           <p className="text-[oklch(0.45_0.01_285)] text-sm text-center">
-            ¿Tienes un proyecto similar? Estoy disponible para consultoría y
-            desarrollo de soluciones complejas.{" "}
+            ¿Tienes un proyecto en mente? Estoy disponible para nuevos
+            desarrollos y colaboraciones.{" "}
             <button
               onClick={() => {
                 const el = document.getElementById("contact");
