@@ -1,8 +1,3 @@
-/*
- * SLATE ARCHITECT — Navbar
- * Navegación fija con indicador de sección activa y efecto blur
- * V1.2: glassmorphism polish — stronger blur, border reacts to scroll, shadow
- */
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
@@ -51,13 +46,6 @@ export default function Navbar() {
     <header
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        /**
-         * V1.2 glassmorphism:
-         * - Always has a dark semi-transparent base (prevents white flicker)
-         * - Blur increases from 12px → 20px on scroll
-         * - Border goes from invisible → visible on scroll
-         * - Shadow appears only when scrolled
-         */
         backdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "blur(12px)",
         WebkitBackdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "blur(12px)",
         backgroundColor: scrolled
@@ -92,11 +80,10 @@ export default function Navbar() {
                 <li key={link.href}>
                   <button
                     onClick={() => handleNavClick(link.href)}
-                    className={`px-4 py-2 text-sm font-medium transition-all duration-200 rounded-sm relative ${
-                      isActive
-                        ? "text-[oklch(0.82_0.22_145)]"
-                        : "text-[oklch(0.65_0.01_285)] hover:text-white"
-                    }`}
+                    className={`px-4 py-2 text-sm font-medium transition-all duration-200 rounded-sm relative ${isActive
+                      ? "text-[oklch(0.82_0.22_145)]"
+                      : "text-[oklch(0.65_0.01_285)] hover:text-white"
+                      }`}
                   >
                     {link.label}
                     {isActive && (

@@ -34,7 +34,7 @@ const projects: Project[] = [
     image: PROJ_2,
     tags: ["Python", "JavaScript", "Firebase"],
     category: "PWA",
-    repo: "#",
+    repo: "https://github.com/alvarodv745-hash/panel-tarjetas-regalo",
   },
   {
     id: 3,
@@ -50,13 +50,6 @@ const projects: Project[] = [
 
 function ProjectCard({ project }: { project: Project }) {
   return (
-    /*
-     * V1.2 hover polish:
-     * - scale 1.02 on hover via whileHover
-     * - green glow box-shadow via CSS transition (respects .card-glow)
-     * - square corners kept (rounded-sm)
-     * - transition duration-300
-     */
     <motion.article
       className="group card-glow rounded-sm bg-[oklch(0.12_0.006_285)] overflow-hidden flex flex-col cursor-default"
       whileHover={{

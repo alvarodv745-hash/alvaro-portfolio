@@ -27,6 +27,10 @@ const socialLinks = [
   },
 ];
 
+// Formulario con Formspree integrado en el componente
+
+
+
 interface FormState {
   name: string;
   email: string;
@@ -42,24 +46,42 @@ export default function ContactSection() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!form.name || !form.email || !form.message) {
       toast.error("Por favor, completa todos los campos.");
       return;
     }
+
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       toast.error("Por favor, introduce un email válido.");
       return;
     }
 
     setSending(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setSending(false);
-    setSent(true);
-    toast.success("¡Mensaje enviado! Te responderé lo antes posible.");
-    setForm({ name: "", email: "", message: "" });
-    setTimeout(() => setSent(false), 4000);
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      const res = await fetch("https://formspree.io/f/mjgljrqv", {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" }
+      });
+
+      if (res.ok) {
+        setSent(true);
+        toast.success("¡Mensaje enviado! Te responderé lo antes posible.");
+        setForm({ name: "", email: "", message: "" });
+        setTimeout(() => setSent(false), 5000);
+      } else {
+        toast.error("Hubo un error al enviar el mensaje. Inténtalo de nuevo.");
+      }
+    } catch (error) {
+      toast.error("Error de conexión. Revisa tu internet.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -95,8 +117,10 @@ export default function ContactSection() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+            <form action="https://formspree.io/f/mjgljrqv" method="POST" onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <input type="text" name="_gotcha" style={{ display: "none" }} />
                 {/* Name */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-mono text-[oklch(0.65_0.01_285)] tracking-wider uppercase">

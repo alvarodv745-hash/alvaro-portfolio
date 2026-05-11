@@ -1,20 +1,5 @@
-/*
- * SLATE ARCHITECT — Hero Section
- * Pantalla completa, nombre en display grande, stack de iconos
- * V1.2: Performance-optimized + dynamic neon mesh cursor effect (Canvas)
- *
- * Perf changes vs V1.2:
- *   - Removed filter: blur(120px) radial-gradient (CPU killer)
- *   - Consolidated 4 overlay divs → 2 (layered gradients merged via CSS)
- *   - Grid overlay uses a tiny 1×1 SVG data-URI (1 layer instead of two gradient layers)
- *   - Neon glow replaced by Canvas mesh that follows cursor (GPU-composited)
- *   - All animated layers use will-change: transform and translateZ(0)
- *   - Entry animations use transform/opacity only (GPU-friendly)
- *   - Canvas runs in its own compositing layer, no DOM repaints
- *   - Mobile: Canvas renders static ambient glow (no pointermove)
- */
 import { useEffect, useState, useRef, useCallback } from "react";
-import { Github, Download, ArrowDown, ExternalLink, Terminal } from "lucide-react";
+import { Github, Download, ExternalLink, Terminal } from "lucide-react";
 
 /* ─── constants ─── */
 
@@ -49,6 +34,17 @@ const IconJavaScript = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}><path d="M0 0h24v24H0V0zm22.034 18.268c-.153-1.19-.731-1.985-1.902-2.354-1.189-.369-2.107-.113-2.646.525-.338.416-.547 1.045-.467 1.748.102 1.371 1.14 1.846 2.354 2.136 1.033.252 1.632.303 1.71.658.107.473-.325.753-.94.753-.839 0-1.241-.464-1.447-.906l-1.692 1.077c.442.946 1.517 1.559 3.035 1.559 2.054 0 3.093-1.102 2.85-2.585-.201-1.23-1.14-1.737-2.354-2.035-1.285-.316-1.812-.444-1.941-.74-.112-.246.034-.555.513-.671.472-.121.902.046 1.135.362.115.166.262.407.269.864l1.888-.118zm-9.29 3.335c0 .592-.313.951-.9.951-.291 0-.495-.11-.693-.262l-1.424 1.14c.456.422 1.108.827 2.214.827 1.932 0 2.85-1.177 2.85-2.7v-7.171h-2.047v7.215z" /></svg>
 );
 
+const IconTypeScript = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}><path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.405-.45-.553-.676-1.222-.676-2.005 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.089a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z" /></svg>
+);
+
+const IconNet = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M22.4 5.4c-1.1-1-2.4-1.5-3.9-1.5-1.5 0-2.7.7-3.6 1.9-.7 1-1.3 2.3-1.8 3.7-.5 1.4-1 2.7-1.4 3.9-.4 1.2-1 2.3-1.8 3.1-.8.8-1.7 1.2-2.7 1.2-.9 0-1.7-.4-2.4-1.1-.7-.7-1.1-1.6-1.3-2.8l-2.1.3c.2 1.5.8 2.8 1.8 3.8s2.3 1.5 3.8 1.5c1.6 0 2.9-.6 4-1.8.8-.9 1.4-2.1 1.9-3.5.5-1.4 1-2.9 1.6-4.4.6-1.5 1.5-2.8 2.6-3.8 1.1-1 2.4-1.5 3.9-1.5.9 0 1.8.3 2.4 1h2.1c-.9-.9-1.6-1.6-2.4-1.6z" />
+    <path d="M12.4 17.4c-1.1 1-2.2 1.9-3.3 1.8-1.3 0-2.3-.5-3.1-1.5-.8-1-1.2-2.4-1.2-4.1h-2.8c0 2.2.6 4.2 1.8 5.8s2.7 2.4 4.4 2.4c1.7 0 3-.8 4-2.6 1-1.8 1.8-4.1 2.6-6.3.8-2.2 1.9-4.2 3.2-5.7 1.3-1.5 2.9-2.4 4.7-2.4 2.8 0 5.1 1 6.6 3 1.4 2 2.1 4.7 2.1 8h-2.8c0-2-.5-3.8-1.5-5.2s-2.3-2.1-3.8-2.1c-1.5 0-2.7.9-3.6 2.7-.9 1.8-1.6 3.9-2.2 5.9z" />
+  </svg>
+);
+
 
 const techStack = [
   { name: "React", Icon: IconReact },
@@ -58,6 +54,8 @@ const techStack = [
   { name: "Node.js", Icon: IconNode },
   { name: "MySQL", Icon: IconMySQL },
   { name: "JavaScript", Icon: IconJavaScript },
+  { name: "TypeScript", Icon: IconTypeScript },
+  { name: ".NET", Icon: IconNet },
 ];
 
 /*
