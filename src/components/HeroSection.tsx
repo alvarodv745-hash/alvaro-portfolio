@@ -55,7 +55,6 @@ const techStack = [
   { name: "MySQL", Icon: IconMySQL },
   { name: "JavaScript", Icon: IconJavaScript },
   { name: "TypeScript", Icon: IconTypeScript },
-  { name: ".NET", Icon: IconNet },
 ];
 
 /*
@@ -509,7 +508,6 @@ export default function HeroSection() {
                   {[
                     { label: "Estado", value: "Disponible", accent: true },
                     { label: "Ubicación", value: "España" },
-                    { label: "Experiencia", value: "3 meses" },
                     { label: "Proyectos", value: "5+ completados" },
                     { label: "Especialidad", value: "Full-Stack" },
                   ].map((item) => (
