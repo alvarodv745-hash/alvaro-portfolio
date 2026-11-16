@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Github, ArrowUpRight } from "lucide-react";
 
 const PROJ_1 = "/Logo_LyricBeats.png";
-const PROJ_2 = "/Panel_tarjetasRegalo.png";
+const PROJ_2 = "/Video_TarjetaRegalo_SaraValor.jpg";
 const PROJ_3 = "/Interfaz-sistema-biblioteca.png";
 
 interface Project {
@@ -28,13 +28,13 @@ const projects: Project[] = [
   },
   {
     id: 2,
-    title: "Generador de Código de Barras",
+    title: "Vídeo Tarjeta Regalo · Sara Valor",
     description:
-      "Panel web interno para crear, consultar y gestionar tarjetas regalo con códigos de barras, historial de movimientos y control de saldo en tiempo real.",
+      "Vídeo publicitario para Instagram Stories/Reels programado íntegramente en código: apertura 3D en CSS, transiciones a medida y mockup de iPhone, para la campaña de un centro de estética.",
     image: PROJ_2,
-    tags: ["Python", "JavaScript", "Firebase"],
-    category: "PWA",
-    repo: "https://github.com/alvarodv745-hash/panel-tarjetas-regalo",
+    tags: ["Remotion", "React", "TypeScript", "Motion Design"],
+    category: "Vídeo",
+    repo: "https://github.com/alvarodv745-hash/saravalor-video-tarjeta-regalo",
   },
   {
     id: 3,

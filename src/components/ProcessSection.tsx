@@ -145,7 +145,7 @@ export default function ProcessSection() {
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <div className="grid grid-cols-2 gap-1">
                   {[
-                    { value: "5+", label: "Proyectos" },
+                    { value: "+10", label: "Proyectos" },
                     { value: "100%", label: "Dedicación" },
                   ].map((stat) => (
                     <div key={stat.label} className="text-center">

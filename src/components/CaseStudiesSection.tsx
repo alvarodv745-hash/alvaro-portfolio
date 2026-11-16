@@ -10,7 +10,7 @@ interface CaseStudy {
   technologies: string[];
   result: string;
   impact: string;
-  category: "Web" | "PWA" | "Desktop";
+  category: "Web" | "PWA" | "Desktop" | "Vídeo";
 }
 
 const caseStudies: CaseStudy[] = [
@@ -29,16 +29,16 @@ const caseStudies: CaseStudy[] = [
   },
   {
     id: 2,
-    title: "Panel Tarjetas Regalo",
-    category: "PWA",
+    title: "Vídeo Tarjeta Regalo · Sara Valor",
+    category: "Vídeo",
     problem:
-      "La gestión manual de tarjetas regalo generaba errores frecuentes en saldos sin trazabilidad de movimientos. Sin historial de transacciones ni códigos de barras estandarizados, era imposible auditar consumos. Los procesos de canje se hacían en papel, con riesgo de duplicados y pérdida de datos.",
+      "Un centro de estética necesitaba un vídeo vertical para Instagram Stories/Reels que diera a conocer su tarjeta regalo en la campaña de Navidad y llevara a la compra online. Debía ser cálido y premium, mostrar el producto real y la web, respetar las zonas seguras de Instagram y dejar hueco al sticker de enlace. Las grabaciones de la caja medían solo 462 px de ancho, menos de la mitad del formato final.",
     solution:
-      "Desarrollé una PWA con Vanilla JS y Firebase Firestore que gestiona tarjetas con formato GC-XXXXXXXX, genera códigos de barras CODE128 con JsBarcode y registra cada movimiento de carga y consumo con historial inmutable. Permite descargar etiquetas térmicas e instalarse como app nativa sin tienda de aplicaciones.",
-    technologies: ["Vanilla JS", "Firebase", "JsBarcode", "PWA", "HTML/CSS"],
+      "Programé la pieza completa (1080 × 1920, 29,6 s) con Remotion, React y TypeScript. La apertura es una caja 3D construida solo con CSS (preserve-3d) y una cámara virtual por fotograma; añadí transiciones propias (rendija, arco y foco), un mockup de iPhone sin dependencias con la web real, el logotipo vectorizado con potrace y un pipeline reproducible de recursos con sharp y ffmpeg.",
+    technologies: ["Remotion", "React 19", "TypeScript", "CSS 3D", "sharp", "ffmpeg"],
     result:
-      "Sistema de control completo con historial inmutable de movimientos, generación automática de códigos de barras y trazabilidad total de cada tarjeta desde su creación.",
-    impact: "Eliminación de errores manuales, auditoría completa de transacciones, instalable como app nativa",
+      "Vídeo de campaña nítido a resolución completa, reproducible y editable desde código, desarrollado por iteraciones (v1 → v2.9) revisando fotogramas a resolución completa en cada versión.",
+    impact: "Motion design programático, pieza lista para Stories/Reels, cambios de copy o ritmo sin rehacer el vídeo",
   },
   {
     id: 3,
@@ -67,6 +67,8 @@ function getCategoryColor(category: string): string {
       return "text-purple-400";
     case "Desktop":
       return "text-green-400";
+    case "Vídeo":
+      return "text-amber-400";
     default:
       return "text-gray-400";
   }
