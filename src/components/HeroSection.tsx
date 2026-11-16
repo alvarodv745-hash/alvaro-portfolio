@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Github, Download, ExternalLink, Terminal } from "lucide-react";
 
 /* ─── constants ─── */
@@ -31,7 +31,7 @@ const IconMySQL = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 const IconJavaScript = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" {...props}><path d="M0 0h24v24H0V0zm22.034 18.268c-.153-1.19-.731-1.985-1.902-2.354-1.189-.369-2.107-.113-2.646.525-.338.416-.547 1.045-.467 1.748.102 1.371 1.14 1.846 2.354 2.136 1.033.252 1.632.303 1.71.658.107.473-.325.753-.94.753-.839 0-1.241-.464-1.447-.906l-1.692 1.077c.442.946 1.517 1.559 3.035 1.559 2.054 0 3.093-1.102 2.85-2.585-.201-1.23-1.14-1.737-2.354-2.035-1.285-.316-1.812-.444-1.941-.74-.112-.246.034-.555.513-.671.472-.121.902.046 1.135.362.115.166.262.407.269.864l1.888-.118zm-9.29 3.335c0 .592-.313.951-.9.951-.291 0-.495-.11-.693-.262l-1.424 1.14c.456.422 1.108.827 2.214.827 1.932 0 2.85-1.177 2.85-2.7v-7.171h-2.047v7.215z" /></svg>
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z" /></svg>
 );
 
 const IconTypeScript = (props: React.SVGProps<SVGSVGElement>) => (
@@ -70,7 +70,7 @@ const NEON_R = 74;
 const NEON_G = 222;
 const NEON_B = 128;
 
-/** Mesh grid definition */
+/** Desktop mesh grid definition */
 const MESH_COLS = 18;
 const MESH_ROWS = 14;
 const CURSOR_RADIUS = 260;          // px – influence area around cursor
@@ -78,9 +78,20 @@ const MAX_NODE_ALPHA = 0.45;        // peak node brightness
 const MAX_LINE_ALPHA = 0.14;        // peak connection brightness
 const LINE_CONNECT_DIST = 130;      // px – max distance to draw a line
 const NODE_SIZE = 1.6;              // px radius of mesh dots
-const LERP_FACTOR = 0.08;           // cursor smoothing (lower = smoother)
-const AMBIENT_X_RATIO = 0.28;       // ambient fallback position
+const LERP_FACTOR = 0.08;           // cursor smoothing per 60fps frame (lower = smoother)
+const AMBIENT_X_RATIO = 0.28;       // ambient fallback position (desktop)
 const AMBIENT_Y_RATIO = 0.35;
+
+/** Narrow / touch layouts */
+const MOBILE_BREAKPOINT = 768;      // px – below this the mesh uses square cells
+const MOBILE_CELL = 40;             // px – target spacing between mesh nodes
+const MOBILE_RADIUS_RATIO = 0.42;   // influence radius relative to section width
+const MOBILE_NODE_SIZE = 1.2;       // px radius of mesh dots on phones
+const TOUCH_LERP_FACTOR = 0.14;     // follow the finger a bit tighter than the mouse
+const RELEASE_LERP_FACTOR = 0.045;  // slow, soft glide back after lifting the finger
+const IDLE_DRIFT_SPEED = 0.00035;   // rad/ms – ambient wander when not touching
+const MAX_DPR = 2;                  // cap canvas resolution (perf on 3x phones)
+const FRAME_MS = 1000 / 60;
 
 /* ─── TypewriterText ─── */
 
@@ -121,176 +132,275 @@ interface MeshNode {
   baseY: number;
 }
 
+interface MeshLayout {
+  cols: number;
+  rows: number;
+  radius: number;
+  connectDist: number;
+  nodeSize: number;
+  /** narrow layout: square cells + idle drift */
+  compact: boolean;
+}
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+/**
+ * Desktop keeps the original 18×14 grid. Narrow screens get roughly square
+ * cells (~52px) so the mesh isn't squashed horizontally and stretched
+ * vertically, and the influence radius scales with the width.
+ */
+function getMeshLayout(w: number, h: number): MeshLayout {
+  if (w >= MOBILE_BREAKPOINT) {
+    return {
+      cols: MESH_COLS,
+      rows: MESH_ROWS,
+      radius: CURSOR_RADIUS,
+      connectDist: LINE_CONNECT_DIST,
+      nodeSize: NODE_SIZE,
+      compact: false,
+    };
+  }
+  const cols = Math.max(4, Math.round(w / MOBILE_CELL) + 1);
+  const rows = Math.max(4, Math.round(h / MOBILE_CELL) + 1);
+  const cellX = w / (cols - 1);
+  const cellY = h / (rows - 1);
+  return {
+    cols,
+    rows,
+    radius: Math.min(w * MOBILE_RADIUS_RATIO, CURSOR_RADIUS),
+    // reach the diagonal neighbour, never the next ring
+    connectDist: Math.hypot(cellX, cellY) * 1.05,
+    nodeSize: MOBILE_NODE_SIZE,
+    compact: true,
+  };
+}
+
+function buildNodes(w: number, h: number, layout: MeshLayout): MeshNode[] {
+  const nodes: MeshNode[] = [];
+  for (let r = 0; r < layout.rows; r++) {
+    for (let c = 0; c < layout.cols; c++) {
+      nodes.push({
+        baseX: (c / (layout.cols - 1)) * w,
+        baseY: (r / (layout.rows - 1)) * h,
+      });
+    }
+  }
+  return nodes;
+}
+
 function NeonMeshCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rafRef = useRef(0);
 
-  // Mutable refs for cursor tracking (avoids re-renders)
-  const cursorRef = useRef({ x: -9999, y: -9999 });
-  const smoothRef = useRef({ x: -9999, y: -9999 });
-  const hasCursorRef = useRef(false);
-  const nodesRef = useRef<MeshNode[]>([]);
-  const sizeRef = useRef({ w: 0, h: 0 });
-
-  /** Build the grid of mesh points. Called once per resize. */
-  const buildNodes = useCallback((w: number, h: number) => {
-    const nodes: MeshNode[] = [];
-    for (let r = 0; r < MESH_ROWS; r++) {
-      for (let c = 0; c < MESH_COLS; c++) {
-        const baseX = (c / (MESH_COLS - 1)) * w;
-        const baseY = (r / (MESH_ROWS - 1)) * h;
-        nodes.push({ baseX, baseY });
-      }
-    }
-    nodesRef.current = nodes;
-    sizeRef.current = { w, h };
-  }, []);
-
-  /** Core render loop — paints nodes + lines relative to (smoothed) cursor. */
-  const render = useCallback(() => {
+  useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: true });
-    if (!ctx) return;
+    const section = canvas?.closest("section");
+    const ctx = canvas?.getContext("2d", { alpha: true });
+    if (!canvas || !section || !ctx) return;
 
-    const { w, h } = sizeRef.current;
-    const dpr = window.devicePixelRatio || 1;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    ctx.clearRect(0, 0, w * dpr, h * dpr);
-    ctx.save();
-    ctx.scale(dpr, dpr);
+    // Mutable state lives in the effect closure (no re-renders)
+    let w = 0;
+    let h = 0;
+    let dpr = 1;
+    let layout = getMeshLayout(0, 0);
+    let nodes: MeshNode[] = [];
+    let raf = 0;
+    let running = false;
+    let lastTime = 0;
+    let driftTime = 0;
+    let inputActive = false;
+    let activeLevel = 0; // 0 → ambient, 1 → following input (eases the glow)
+    const cursor: Point = { x: 0, y: 0 };
+    const smooth: Point = { x: 0, y: 0 };
 
-    // Determine focus point: smoothed cursor or ambient center
-    const focus = hasCursorRef.current
-      ? smoothRef.current
-      : { x: w * AMBIENT_X_RATIO, y: h * AMBIENT_Y_RATIO };
-
-    // Lerp the smooth position toward the real cursor
-    if (hasCursorRef.current) {
-      smoothRef.current = {
-        x: smoothRef.current.x + (cursorRef.current.x - smoothRef.current.x) * LERP_FACTOR,
-        y: smoothRef.current.y + (cursorRef.current.y - smoothRef.current.y) * LERP_FACTOR,
-      };
-    }
-
-    const nodes = nodesRef.current;
-    const radiusSq = CURSOR_RADIUS * CURSOR_RADIUS;
-    const connectSq = LINE_CONNECT_DIST * LINE_CONNECT_DIST;
-
-    // Pre-compute each node's intensity (distance to focus)
-    const intensities = new Float32Array(nodes.length);
-    for (let i = 0; i < nodes.length; i++) {
-      const dx = nodes[i].baseX - focus.x;
-      const dy = nodes[i].baseY - focus.y;
-      const distSq = dx * dx + dy * dy;
-      intensities[i] = distSq < radiusSq ? 1 - Math.sqrt(distSq) / CURSOR_RADIUS : 0;
-    }
-
-    // Draw lines between neighbouring nodes that are both lit
-    ctx.lineWidth = 0.8;
-    for (let i = 0; i < nodes.length; i++) {
-      if (intensities[i] <= 0) continue;
-      for (let j = i + 1; j < nodes.length; j++) {
-        if (intensities[j] <= 0) continue;
-        const dx = nodes[i].baseX - nodes[j].baseX;
-        const dy = nodes[i].baseY - nodes[j].baseY;
-        if (dx * dx + dy * dy > connectSq) continue;
-
-        const lineAlpha = Math.min(intensities[i], intensities[j]) * MAX_LINE_ALPHA;
-        ctx.strokeStyle = `rgba(${NEON_R},${NEON_G},${NEON_B},${lineAlpha})`;
-        ctx.beginPath();
-        ctx.moveTo(nodes[i].baseX, nodes[i].baseY);
-        ctx.lineTo(nodes[j].baseX, nodes[j].baseY);
-        ctx.stroke();
+    /** Where the light rests when nobody is interacting. */
+    const ambientPoint = (): Point => {
+      if (!layout.compact) {
+        return { x: w * AMBIENT_X_RATIO, y: h * AMBIENT_Y_RATIO };
       }
-    }
+      // Gentle Lissajous wander so the mesh never looks frozen on phones
+      const t = reducedMotion ? 0 : driftTime * IDLE_DRIFT_SPEED;
+      return {
+        x: w * (0.5 + 0.3 * Math.sin(t)),
+        y: h * (0.32 + 0.14 * Math.sin(t * 0.73 + 1.1)),
+      };
+    };
 
-    // Draw nodes
-    for (let i = 0; i < nodes.length; i++) {
-      if (intensities[i] <= 0) continue;
-      const alpha = intensities[i] * MAX_NODE_ALPHA;
-      ctx.fillStyle = `rgba(${NEON_R},${NEON_G},${NEON_B},${alpha})`;
-      ctx.beginPath();
-      ctx.arc(nodes[i].baseX, nodes[i].baseY, NODE_SIZE + intensities[i] * 1.2, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    const draw = () => {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
 
-    // Soft radial glow at focus
-    if (hasCursorRef.current || true) {
-      const grad = ctx.createRadialGradient(focus.x, focus.y, 0, focus.x, focus.y, CURSOR_RADIUS * 0.65);
-      const glowAlpha = hasCursorRef.current ? 0.07 : 0.04;
+      const focus = smooth;
+      const radius = layout.radius;
+      const radiusSq = radius * radius;
+      const connectSq = layout.connectDist * layout.connectDist;
+
+      // Collect only lit nodes so the line pass stays small
+      const lit: number[] = [];
+      const intensity = new Float32Array(nodes.length);
+      for (let i = 0; i < nodes.length; i++) {
+        const dx = nodes[i].baseX - focus.x;
+        const dy = nodes[i].baseY - focus.y;
+        const distSq = dx * dx + dy * dy;
+        if (distSq < radiusSq) {
+          intensity[i] = 1 - Math.sqrt(distSq) / radius;
+          lit.push(i);
+        }
+      }
+
+      // Lines between neighbouring lit nodes
+      ctx.lineWidth = 0.8;
+      for (let a = 0; a < lit.length; a++) {
+        const i = lit[a];
+        for (let b = a + 1; b < lit.length; b++) {
+          const j = lit[b];
+          const dx = nodes[i].baseX - nodes[j].baseX;
+          const dy = nodes[i].baseY - nodes[j].baseY;
+          if (dx * dx + dy * dy > connectSq) continue;
+
+          const lineAlpha = Math.min(intensity[i], intensity[j]) * MAX_LINE_ALPHA;
+          ctx.strokeStyle = `rgba(${NEON_R},${NEON_G},${NEON_B},${lineAlpha})`;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].baseX, nodes[i].baseY);
+          ctx.lineTo(nodes[j].baseX, nodes[j].baseY);
+          ctx.stroke();
+        }
+      }
+
+      // Nodes
+      for (const i of lit) {
+        ctx.fillStyle = `rgba(${NEON_R},${NEON_G},${NEON_B},${intensity[i] * MAX_NODE_ALPHA})`;
+        ctx.beginPath();
+        ctx.arc(nodes[i].baseX, nodes[i].baseY, layout.nodeSize + intensity[i] * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Soft radial glow at focus
+      const glowAlpha = 0.04 + 0.03 * activeLevel;
+      const grad = ctx.createRadialGradient(focus.x, focus.y, 0, focus.x, focus.y, radius * 0.65);
       grad.addColorStop(0, `rgba(${NEON_R},${NEON_G},${NEON_B},${glowAlpha})`);
       grad.addColorStop(1, `rgba(${NEON_R},${NEON_G},${NEON_B},0)`);
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
-    }
+    };
 
-    ctx.restore();
+    const tick = (now: number) => {
+      // Frame-rate independent easing (same feel at 60Hz and 120Hz)
+      const dt = lastTime ? Math.min(now - lastTime, 100) : FRAME_MS;
+      lastTime = now;
+      if (!inputActive) driftTime += dt;
 
-    rafRef.current = requestAnimationFrame(render);
-  }, []);
+      const factor = !layout.compact
+        ? LERP_FACTOR
+        : inputActive
+          ? TOUCH_LERP_FACTOR
+          : RELEASE_LERP_FACTOR;
+      const k = 1 - Math.pow(1 - factor, dt / FRAME_MS);
+      const target = inputActive ? cursor : ambientPoint();
+      smooth.x += (target.x - smooth.x) * k;
+      smooth.y += (target.y - smooth.y) * k;
+      activeLevel += ((inputActive ? 1 : 0) - activeLevel) * k;
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+      draw();
+      raf = requestAnimationFrame(tick);
+    };
+
+    const start = () => {
+      if (running || reducedMotion) return;
+      running = true;
+      lastTime = 0;
+      raf = requestAnimationFrame(tick);
+    };
+
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
 
     const resize = () => {
-      const rect = canvas.parentElement?.getBoundingClientRect();
-      if (!rect) return;
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
-      buildNodes(rect.width, rect.height);
+      const rect = section.getBoundingClientRect();
+      if (Math.abs(rect.width - w) < 1 && Math.abs(rect.height - h) < 1) return;
+      w = rect.width;
+      h = rect.height;
+      dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      layout = getMeshLayout(w, h);
+      nodes = buildNodes(w, h, layout);
 
-      // Set initial ambient position if no cursor yet
-      if (!hasCursorRef.current) {
-        smoothRef.current = {
-          x: rect.width * AMBIENT_X_RATIO,
-          y: rect.height * AMBIENT_Y_RATIO,
-        };
+      if (!inputActive) {
+        const p = ambientPoint();
+        smooth.x = p.x;
+        smooth.y = p.y;
       }
+      if (!running) draw();
     };
 
+    const setCursor = (clientX: number, clientY: number) => {
+      const rect = section.getBoundingClientRect();
+      cursor.x = clientX - rect.left;
+      cursor.y = clientY - rect.top;
+      inputActive = true;
+    };
+
+    // Mouse / pen: classic hover tracking
     const onPointerMove = (e: PointerEvent) => {
-      const rect = canvas.parentElement?.getBoundingClientRect();
-      if (!rect) return;
-      cursorRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
-      if (!hasCursorRef.current) {
-        // First time cursor enters — snap smooth position to avoid jump
-        smoothRef.current = { ...cursorRef.current };
-        hasCursorRef.current = true;
-      }
+      if (e.pointerType === "touch") return;
+      setCursor(e.clientX, e.clientY);
+    };
+    const onPointerLeave = (e: PointerEvent) => {
+      if (e.pointerType !== "touch") inputActive = false;
     };
 
-    const onPointerLeave = () => {
-      hasCursorRef.current = false;
+    // Touch: touchmove keeps firing while the page scrolls (pointer events
+    // get cancelled), so the light follows the finger as you swipe.
+    const onTouch = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (t) setCursor(t.clientX, t.clientY);
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length === 0) inputActive = false;
     };
 
     resize();
-    window.addEventListener("resize", resize, { passive: true });
 
-    const section = canvas.closest("section");
-    if (section) {
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(section);
+
+    // Only animate while the hero is on screen
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) start();
+      else stop();
+    });
+    visibilityObserver.observe(section);
+
+    if (!reducedMotion) {
       section.addEventListener("pointermove", onPointerMove, { passive: true });
       section.addEventListener("pointerleave", onPointerLeave);
+      section.addEventListener("touchstart", onTouch, { passive: true });
+      section.addEventListener("touchmove", onTouch, { passive: true });
+      section.addEventListener("touchend", onTouchEnd, { passive: true });
+      section.addEventListener("touchcancel", onTouchEnd, { passive: true });
     }
 
-    rafRef.current = requestAnimationFrame(render);
-
     return () => {
-      cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize", resize);
-      if (section) {
-        section.removeEventListener("pointermove", onPointerMove);
-        section.removeEventListener("pointerleave", onPointerLeave);
-      }
+      stop();
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+      section.removeEventListener("pointermove", onPointerMove);
+      section.removeEventListener("pointerleave", onPointerLeave);
+      section.removeEventListener("touchstart", onTouch);
+      section.removeEventListener("touchmove", onTouch);
+      section.removeEventListener("touchend", onTouchEnd);
+      section.removeEventListener("touchcancel", onTouchEnd);
     };
-  }, [buildNodes, render]);
+  }, []);
 
   return (
     <canvas

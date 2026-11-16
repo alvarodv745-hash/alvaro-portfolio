@@ -112,6 +112,17 @@
     scroll-behavior: smooth;
   }
 
+  /*
+   * Entry animations start offset (e.g. x: 20) and decorative corners sit at
+   * -right-2. On phones that horizontal overflow makes the browser zoom the
+   * whole page out ("cut" look). `clip` trims it without creating a scroll
+   * container, so fixed/sticky elements keep working.
+   */
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'DM Sans', sans-serif;
