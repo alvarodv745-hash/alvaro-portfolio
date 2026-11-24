@@ -1,7 +1,7 @@
 /*
  * SLATE ARCHITECT — Home Page
  * Portfolio completo de Álvaro Durán Valor
- * Secciones: Hero → Stack → Proyectos → Proceso → Estudios de Caso → Contacto
+ * Secciones: Hero → Stack → Proyectos → Proceso → Estudios de Caso → Certificaciones → Contacto
  */
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -9,6 +9,7 @@ import StackSection from "@/components/StackSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ProcessSection from "@/components/ProcessSection";
 import CaseStudiesSection from "@/components/CaseStudiesSection";
+import CertificationsSection from "@/components/CertificationsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 
@@ -22,6 +23,7 @@ export default function Home() {
         <ProjectsSection />
         <ProcessSection />
         <CaseStudiesSection />
+        <CertificationsSection />
         <ContactSection />
       </main>
       <Footer />

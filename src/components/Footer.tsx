@@ -42,13 +42,14 @@ export default function Footer() {
 
           {/* Nav links */}
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {["Inicio", "Stack", "Proyectos", "Proceso", "Casos", "Contacto"].map((item) => {
+            {["Inicio", "Stack", "Proyectos", "Proceso", "Casos", "Certs", "Contacto"].map((item) => {
               const idMap: Record<string, string> = {
                 "Inicio": "hero",
                 "Stack": "stack",
                 "Proyectos": "projects",
                 "Proceso": "process",
                 "Casos": "case-studies",
+                "Certs": "certifications",
                 "Contacto": "contact",
               };
               return (

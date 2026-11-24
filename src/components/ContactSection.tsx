@@ -96,7 +96,7 @@ export default function ContactSection() {
           viewport={{ once: true }}
         >
           <div className="flex items-center gap-3 mb-4">
-            <span className="section-number">// 05</span>
+            <span className="section-number">// 06</span>
             <div className="neon-line w-12" />
           </div>
           <h2 className="font-display font-extrabold text-4xl md:text-5xl text-white mb-4">
