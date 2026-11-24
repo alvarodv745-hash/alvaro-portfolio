@@ -65,6 +65,16 @@ const categories: Category[] = [
       { name: "VS Code", level: "Avanzado", color: "#007ACC" },
     ],
   },
+  {
+    label: "Inteligencia Artificial",
+    number: "06",
+    items: [
+      { name: "APIs de LLM (Groq)", level: "Intermedio", color: "#F55036" },
+      { name: "Prompts / salidas JSON", level: "Intermedio", color: "#10A37F" },
+      { name: "Claude Code", level: "Avanzado", color: "#D97757" },
+      { name: "n8n", level: "Familiarizado", color: "#EA4B71" },
+    ],
+  },
 ];
 
 function getLevelColor(level: SkillLevel): string {
@@ -189,7 +199,7 @@ export default function StackSection() {
 
           {/* Extra card: Formación */}
           <motion.div
-            className="card-glow p-6 rounded-sm bg-[oklch(0.12_0.006_285)] border border-[oklch(0.18_0.007_285)] flex flex-col justify-between hover:border-[oklch(0.22_0.008_285)] transition-colors duration-300"
+            className="card-glow md:col-span-2 xl:col-span-3 p-6 rounded-sm bg-[oklch(0.12_0.006_285)] border border-[oklch(0.18_0.007_285)] flex flex-col justify-between hover:border-[oklch(0.22_0.008_285)] transition-colors duration-300"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: categories.length * 0.08 }}
@@ -197,14 +207,15 @@ export default function StackSection() {
           >
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <span className="section-number text-lg">06</span>
+                <span className="section-number text-lg">07</span>
                 <h3 className="font-display font-bold text-white text-lg">
                   Formación
                 </h3>
               </div>
-              <ul className="flex flex-col gap-3">
+              <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-3">
                 {[
                   "DAM — Desarrollo de Aplicaciones Multiplataforma",
+                  "Prácticas FCT — OpenWebinars (IA y automatización)",
                   "Desarrollo Web Full Stack",
                   "Flutter & Dart — Aplicaciones Móviles",
                   "Clean Architecture & SOLID",

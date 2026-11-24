@@ -513,7 +513,7 @@ export default function HeroSection() {
                 }`}
             >
               <p className="font-display text-xl md:text-2xl font-semibold text-[oklch(0.72_0.01_285)]">
-                <TypewriterText text="Desarrollador de Aplicaciones Multiplataforma" />
+                <TypewriterText text="Desarrollador Full Stack · IA aplicada" />
               </p>
             </div>
 
@@ -522,9 +522,9 @@ export default function HeroSection() {
               className={`text-[oklch(0.58_0.01_285)] text-base md:text-lg max-w-2xl leading-relaxed mb-10 transition-[opacity,transform] duration-700 delay-300 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
             >
-              Construyo todo tipo de servicios digitales desde, páginas fullstack web, como aplicaciones multiplataforma,
-              hasta sistemas de gestión de datos, con foco en rendimiento, experiencia de usuario y código limpio.
-              Por lo general soy un apasionado por las nuevas tecnologías y el desarrollo de soluciones reales.
+              Técnico Superior en DAM. Desarrollo aplicaciones web full stack, apps multiplataforma y sistemas
+              de gestión de datos, e integro modelos de lenguaje (LLM) para crear herramientas útiles con IA.
+              Me apasionan las nuevas tecnologías y construir soluciones reales con código limpio.
             </p>
 
             {/* CTA Buttons */}
@@ -602,7 +602,7 @@ export default function HeroSection() {
           >
             <div className="relative">
               {/* Main card */}
-              <div className="border border-[oklch(0.22_0.008_285)] bg-[oklch(0.12_0.006_285/0.8)] backdrop-blur-sm rounded-sm p-6 w-64">
+              <div className="border border-[oklch(0.22_0.008_285)] bg-[oklch(0.12_0.006_285/0.8)] backdrop-blur-sm rounded-sm p-6 w-72">
                 <div className="flex items-center gap-2 mb-5">
                   <div className="w-2 h-2 rounded-full bg-[oklch(0.82_0.22_145)] animate-pulse-neon" />
                   <span className="font-mono text-xs text-[oklch(0.55_0.01_285)]">status.json</span>
@@ -611,9 +611,9 @@ export default function HeroSection() {
                 <div className="flex flex-col gap-4">
                   {[
                     { label: "Estado", value: "Disponible", accent: true },
-                    { label: "Ubicación", value: "España" },
+                    { label: "Ubicación", value: "Sevilla · Extremadura" },
                     { label: "Proyectos", value: "+10 completados" },
-                    { label: "Especialidad", value: "Full-Stack" },
+                    { label: "Especialidad", value: "Full-Stack · IA" },
                   ].map((item) => (
                     <div key={item.label} className="flex justify-between items-start gap-2">
                       <span className="font-mono text-xs text-[oklch(0.40_0.01_285)]">

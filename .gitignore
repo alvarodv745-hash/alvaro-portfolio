@@ -110,3 +110,6 @@ temp/
 
 # AI agents
 .claude/
+# Copias de seguridad locales (contienen datos personales: no subir)
+backups/
+cv-source/out/

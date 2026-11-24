@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>CV — Álvaro Durán Valor</title>
+<!--
+  Fuente del CV. Exportar a PDF con:  node cv-source/build-cv.mjs
+  Variantes:  cv.html            → IA + Full Stack (versión principal, la del portfolio)
+              cv.html?v=consultoria → consultoras (Viewnext, NTT DATA, Accenture, Indra...)
+  Sin DNI ni fecha de nacimiento a propósito: el PDF es público en el portfolio.
+-->
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #2a3a44;        /* texto */
+    --accent: #23495c;     /* títulos (azul pizarra del CV original) */
+    --muted: #5d6b73;
+    --rule: #c9d3d8;
+  }
+  html, body { background: #fff; }
+  body {
+    width: 210mm; height: 297mm; overflow: hidden;
+    font-family: "Grandview", "Bahnschrift", "Segoe UI", sans-serif;
+    font-variation-settings: "wght" 330, "wdth" 100;
+    color: var(--ink); font-size: 9.6pt; line-height: 1.34;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page { display: grid; grid-template-columns: 70mm 1fr; column-gap: 10mm; padding: 13mm 13mm 11mm 14mm; height: 100%; }
+
+  h1 { font-weight: 300; font-variation-settings: "wght" 300; color: var(--accent); font-size: 31pt; line-height: 1.02; letter-spacing: .5pt; text-transform: uppercase; }
+  .headline { margin-top: 3mm; font-size: 11.5pt; color: var(--accent); font-variation-settings: "wght" 450; letter-spacing: .3pt; }
+  h2 { font-weight: 300; font-variation-settings: "wght" 300; color: var(--accent); font-size: 15pt; text-transform: uppercase; letter-spacing: .4pt; margin: 5.2mm 0 2mm; padding-bottom: 1mm; border-bottom: .4pt solid var(--rule); }
+  h3 { font-size: 9.8pt; font-variation-settings: "wght" 520; color: var(--ink); }
+  .meta { color: var(--muted); font-size: 8.6pt; }
+  p + p { margin-top: 1.6mm; }
+  strong, b { font-variation-settings: "wght" 520; font-weight: normal; }
+  a { color: var(--accent); text-decoration: none; }
+
+  .photo { width: 100%; height: 76mm; object-fit: cover; object-position: center 20%; display: block; }
+  .contact { list-style: none; }
+  .contact li { margin-bottom: 1.1mm; word-break: break-word; }
+  .skill { margin-bottom: 2.2mm; }
+  .skill b { display: block; color: var(--accent); }
+
+  .profile { margin-top: 4mm; }
+  .item { margin-bottom: 3mm; break-inside: avoid; }
+  .item .row { display: flex; justify-content: space-between; gap: 3mm; align-items: baseline; }
+  .item p { margin-top: .6mm; }
+  .tech { margin-top: .6mm; color: var(--muted); font-size: 8.6pt; }
+
+  /* Variantes */
+  [data-only] { display: none; }
+  body[data-variant="ia"] [data-only="ia"],
+  body[data-variant="consultoria"] [data-only="consultoria"] { display: revert; }
+</style>
+</head>
+<body data-variant="ia">
+<script>
+  // ?v=consultoria cambia titular, perfil y orden de competencias
+  const v = new URLSearchParams(location.search).get("v");
+  if (v === "consultoria") document.body.dataset.variant = "consultoria";
+</script>
+
+<div class="page">
+  <!-- ─── Columna izquierda ─── -->
+  <aside>
+    <img class="photo" src="foto.jpg" alt="Álvaro Durán Valor" />
+
+    <h2>Contacto</h2>
+    <ul class="contact">
+      <li>Sevilla, España</li>
+      <li>Disponible en Extremadura y Andalucía<br><span class="meta">Presencial · híbrido · remoto</span></li>
+      <li>609 076 443</li>
+      <li><a href="mailto:alvarodv745@gmail.com">alvarodv745@gmail.com</a></li>
+      <li><a href="https://alvaro-portfolio1.vercel.app/">alvaro-portfolio1.vercel.app</a></li>
+      <li><a href="https://github.com/alvarodv745-hash">github.com/alvarodv745-hash</a></li>
+      <li><a href="https://www.linkedin.com/in/%C3%A1lvaro-dur%C3%A1n-valor">linkedin.com/in/álvaro-durán-valor</a></li>
+    </ul>
+
+    <h2>Competencias</h2>
+
+    <div class="skill" data-only="ia">
+      <b>Inteligencia artificial</b>
+      Integración de LLM vía API (Groq · LLaMA 3.1), diseño de prompts y salidas estructuradas (JSON), desarrollo asistido por IA con Claude Code.
+    </div>
+
+    <div class="skill" data-only="consultoria">
+      <b>Backend</b>
+      Java, Spring Boot, Python, Node.js, PHP, APIs REST
+    </div>
+
+    <div class="skill">
+      <b>Frontend</b>
+      React, TypeScript, JavaScript, HTML/CSS, Tailwind CSS
+    </div>
+
+    <div class="skill" data-only="ia">
+      <b>Backend</b>
+      Python, Node.js, Java, Spring Boot, PHP, APIs REST
+    </div>
+
+    <div class="skill">
+      <b>Bases de datos</b>
+      MySQL, PostgreSQL, MongoDB, Firebase / Firestore
+    </div>
+
+    <div class="skill">
+      <b>Móvil</b>
+      Flutter, React Native, Kotlin
+    </div>
+
+    <div class="skill" data-only="consultoria">
+      <b>Inteligencia artificial</b>
+      Integración de LLM vía API, prompts y salidas estructuradas (JSON), desarrollo asistido con Claude Code.
+    </div>
+
+    <div class="skill">
+      <b>Herramientas</b>
+      Git / GitHub, Docker, Figma, VS Code, Cursor, Antigravity (IDE), Claude / Claude Code, Remotion
+    </div>
+
+    <div class="skill">
+      <b>Idiomas</b>
+      Español: nativo<br>Inglés: intermedio (B1–B2)
+    </div>
+  </aside>
+
+  <!-- ─── Columna derecha ─── -->
+  <main>
+    <h1>Álvaro<br>Durán Valor</h1>
+    <div class="headline" data-only="ia">Desarrollador Full Stack · IA aplicada</div>
+    <div class="headline" data-only="consultoria">Desarrollador de Aplicaciones · Full Stack</div>
+
+    <div class="profile" data-only="ia">
+      <p>Técnico Superior en Desarrollo de Aplicaciones Multiplataforma. Desarrollo aplicaciones web full stack e integro modelos de lenguaje (LLM) para crear herramientas útiles: generación de contenido con IA, salidas estructuradas y automatización de tareas.</p>
+      <p>Trabajo a diario con desarrollo asistido por IA. Persona proactiva, con facilidad de aprendizaje y acostumbrada a trabajar en equipo.</p>
+    </div>
+    <div class="profile" data-only="consultoria">
+      <p>Técnico Superior en Desarrollo de Aplicaciones Multiplataforma con interés en consultoría tecnológica, desarrollo de software empresarial y transformación digital.</p>
+      <p>Experiencia con proyectos web full stack, APIs REST y bases de datos relacionales, y con integración de IA. Persona proactiva, con facilidad de aprendizaje y acostumbrada a trabajar en equipo.</p>
+    </div>
+
+    <h2>Experiencia</h2>
+    <div class="item">
+      <div class="row"><h3>Prácticas (FCT) — OpenWebinars</h3><span class="meta">Mar – Jun 2026 · Online</span></div>
+      <p>Prácticas del ciclo DAM en una plataforma de formación tecnológica online, con formación práctica guiada por profesionales del sector en desarrollo de software, IA y automatización (n8n).</p>
+    </div>
+
+    <h2>Proyectos</h2>
+    <div class="item">
+      <div class="row"><h3>LyricBeats — Aplicación web con IA</h3><span class="meta">Proyecto final DAM</span></div>
+      <p>Plataforma de creación musical: genera letras con IA y las combina con un secuenciador de beats de 16 pasos × 6 instrumentos sobre Web Audio API. Autenticación y biblioteca de proyectos en la nube.</p>
+      <div class="tech">React · Vite · JavaScript · Groq API (LLaMA 3.1) · Firebase</div>
+    </div>
+    <div class="item">
+      <div class="row"><h3>Vídeo Tarjeta Regalo — Sara Valor</h3><span class="meta">Encargo para cliente</span></div>
+      <p>Vídeo publicitario para Instagram Stories/Reels programado íntegramente en código: apertura 3D construida con CSS, transiciones a medida, mockup de iPhone y pipeline de recursos reproducible.</p>
+      <div class="tech">Remotion · React · TypeScript · sharp · ffmpeg</div>
+    </div>
+    <div class="item">
+      <div class="row"><h3>Sistema de Biblioteca — Cliente-servidor</h3><span class="meta">Proyecto DAM</span></div>
+      <p>API REST con control de préstamos, usuarios y roles (bibliotecario/lector), triggers de disponibilidad en base de datos y escaneo QR por webcam desde un cliente de escritorio.</p>
+      <div class="tech">PHP · MySQL · Python · Tkinter · API REST</div>
+    </div>
+
+    <h2>Educación</h2>
+    <div class="item">
+      <div class="row"><h3>CFGS Desarrollo de Aplicaciones Multiplataforma</h3><span class="meta">2023 – 2025</span></div>
+      <p>IES Santa Joaquina de Vedruna · Sevilla</p>
+    </div>
+    <div class="item">
+      <div class="row"><h3>Bachillerato de Ciencias Sociales</h3><span class="meta">2021 – 2023</span></div>
+      <p>Colegio Claret · Don Benito (Badajoz)</p>
+    </div>
+
+    <h2>Formación complementaria</h2>
+    <div class="item">
+      <div class="row"><h3>30 cursos certificados — OpenWebinars · BIG school</h3><span class="meta">121 h · 2026</span></div>
+      <p>Agentes de IA Generativa (LangChain, LangGraph, RAG, MCP, FastAPI), Desarrollo con IA: de 0 a Producción (BIG school), Spring AI, Prompt Engineering, Integración de APIs en IA Generativa, n8n y Flutter con Firebase.</p>
+      <div class="tech">Verificables en alvaro-portfolio1.vercel.app/#certifications</div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
