@@ -15,7 +15,7 @@ const socialLinks = [
     icon: Linkedin,
     label: "LinkedIn",
     handle: "Álvaro Durán Valor",
-    href: "https://www.linkedin.com/in/álvaro-durán-valor",
+    href: "https://www.linkedin.com/in/alvaro-duran-valor/",
     color: "hover:text-[#0A66C2]",
   },
   {

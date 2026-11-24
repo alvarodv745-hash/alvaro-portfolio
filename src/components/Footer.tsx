@@ -80,7 +80,7 @@ export default function Footer() {
               <Github size={16} />
             </a>
             <a
-              href="https://www.linkedin.com/in/álvaro-durán-valor"
+              href="https://www.linkedin.com/in/alvaro-duran-valor/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[oklch(0.55_0.01_285)] hover:text-[#0A66C2] transition-colors duration-200"
